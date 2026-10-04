@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>KPSS Takip+ Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<script src="chart.umd.js"></script>
+<style>
+:root{--ink:#0f172a;--blue:#1e40af;--blue2:#3b5bfd;--bg:#f3f5fb;--line:#e6e9f2;--mute:#64748b}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,"SF Pro Text",-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.header{position:relative;overflow:hidden;color:#fff;margin-bottom:14px;padding:calc(28px + env(safe-area-inset-top)) 22px 32px;border-radius:0 0 34px 34px;background:radial-gradient(110% 130% at 105% -10%,#4f6bff 0%,transparent 58%),linear-gradient(135deg,#0b1220,#1e40af)}
+.header::after{content:"";position:absolute;right:-40px;bottom:-60px;width:180px;height:180px;border-radius:50%;border:30px solid rgba(255,255,255,.07)}
+.header h1{font-size:25px;font-weight:900;letter-spacing:-.7px}
+.header p{font-size:11px!important;opacity:.75!important;margin-top:4px;letter-spacing:.2px}
+.tabs{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;display:flex;gap:2px;padding:6px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(15,23,42,.06);border-radius:28px;box-shadow:0 12px 40px rgba(15,23,42,.2)}
+.tab{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 8px;border-radius:22px;background:transparent;font-weight:700;font-size:10px;color:var(--mute);cursor:pointer;transition:background .2s,color .2s}
+.tab i{font-style:normal;font-size:20px;line-height:1;transition:transform .2s}
+.tab.active{background:var(--ink);color:#fff;box-shadow:0 8px 18px rgba(15,23,42,.35)}
+.tab.active i{transform:scale(1.15)}
+.card{background:#fff;border-radius:22px;padding:18px;margin:0 14px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 30px rgba(15,23,42,.05);border:1px solid var(--line)}
+.subTabs{display:flex;gap:4px;padding:4px;margin-bottom:14px;background:#eef1f8;border-radius:14px}
+.subTab{flex:1;padding:10px 6px;border-radius:11px;font-weight:700;font-size:12px;text-align:center;cursor:pointer;color:var(--mute);transition:.2s}
+.subTab.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(15,23,42,.1)}
+label{font-size:11px;font-weight:800;color:var(--mute);margin:10px 0 5px 2px;display:block;text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{width:100%;padding:12px 14px;border-radius:13px;border:1.5px solid var(--line);font-size:16px;background:#fbfcff;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(59,91,253,.14);background:#fff}
+.btn{width:100%;padding:14px;border-radius:14px;border:none;font-weight:800;font-size:14px;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;margin-top:12px;cursor:pointer;box-shadow:0 8px 20px rgba(15,23,42,.22);transition:transform .12s}
+.btn:active,.btn-ai:active,.pomoBtn:active{transform:scale(.97)}
+.filterRow{display:flex;gap:8px;align-items:center;margin:10px 0}
+.filterRow select{width:auto;flex:1;padding:9px 12px;font-size:14px;font-weight:700}
+.chartWrap{position:relative;height:180px;width:100%}
+.hidden{display:none!important}
+.upload-box{border:2px dashed #c7d0e6;border-radius:16px;padding:22px;text-align:center;background:#f7f9ff;cursor:pointer;transition:.2s}
+.upload-box:active{background:#eef2ff;border-color:var(--blue2)}
+.btn-ai{padding:11px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--ink);transition:transform .12s}
+.kaynak{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;align-items:center;background:#fff}
+.homeGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px;margin:0 0 14px}
+.homeCard{background:#fff;border-radius:22px;padding:16px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(15,23,42,.05);cursor:pointer;transition:transform .12s}
+.homeCard:active{transform:scale(.96)}
+.homeCard>div:first-child{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:24px!important;background:#eef2ff}
+.homeCard:nth-child(2)>div:first-child{background:#ffeceb}
+.homeCard:nth-child(3)>div:first-child{background:#e8f8f2}
+.homeCard:nth-child(4)>div:first-child{background:#fff4dc}
+.homeCard b{display:block;margin-top:12px;font-size:14px;letter-spacing:-.2px}
+.homeCard span{font-size:11px;color:var(--mute)}
+.pomoCircle{width:220px;height:220px;border-radius:50%;border:10px solid #dbe4ff;margin:18px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#fff,#f3f6ff);box-shadow:0 20px 50px rgba(59,91,253,.18),inset 0 0 0 1px rgba(15,23,42,.04);transition:border-color .4s}
+.pomoTime{font-size:54px;font-weight:900;letter-spacing:-3px;font-variant-numeric:tabular-nums}
+.pomoLabel{font-size:11px;font-weight:800;color:var(--mute);margin-top:2px;letter-spacing:2px}
+.pomoBtns{display:flex;gap:10px;margin-top:14px}
+.pomoBtn{flex:1;padding:14px;border-radius:14px;border:none;font-weight:800;font-size:14px;cursor:pointer;transition:transform .12s}
+.notebook{width:100%;height:500px;background:#fff;border:1px solid var(--line);border-radius:16px;background-image:linear-gradient(transparent 95%,#e0e7ff 95%);background-size:100% 28px;touch-action:none;cursor:crosshair}
+.item{padding:12px 14px;border:1px solid var(--line);border-radius:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;background:#fcfdff}
+.del{background:none;border:none;color:#dc2626;font-size:12px;font-weight:700;cursor:pointer;padding:6px}
+#toast{position:fixed;left:50%;bottom:calc(104px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:700;z-index:99;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90%;text-align:center;box-shadow:0 10px 30px rgba(15,23,42,.3)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+[id^="main-"]:not(.hidden){animation:fadeUp .28s ease-out}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="header"><h1>KPSS Takip+ Pro</h1><p style="font-size:11px;opacity:.7">Anasayfa • Deneme • Pomodoro • Defterim • Kaynak Tavsiyesi</p></div>
+<div class="tabs">
+  <div class="tab active" id="tab-anasayfa" onclick="switchMain('anasayfa')"><i>🏠</i><span>Ana Menü</span></div>
+  <div class="tab" id="tab-deneme" onclick="switchMain('deneme')"><i>📊</i><span>Deneme Sonuçları</span></div>
+  <div class="tab" id="tab-pomodoro" onclick="switchMain('pomodoro')"><i>🍅</i><span>Pomodoro</span></div>
+  <div class="tab" id="tab-soru" onclick="switchMain('soru')"><i>📸</i><span>Soru</span></div>
+  <div class="tab" id="tab-defterim" onclick="switchMain('defterim')"><i>📓</i><span>Defterim</span></div>
+  <div class="tab" id="tab-kaynak" onclick="switchMain('kaynak')"><i>📚</i><span>Kaynak Tavsiyesi</span></div>
+</div>
+
+<div id="main-anasayfa">
+  <div class="card" style="background:linear-gradient(135deg,#0f172a,#1e40af);color:white;border:none">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div><b style="font-size:16px">Hoşgeldin 👋</b><br><span style="font-size:11px;opacity:.7" id="homeStats"></span></div>
+      <div style="background:rgba(255,255,255,.15);padding:8px 12px;border-radius:12px;font-size:11px;font-weight:800" id="homeDate"></div>
+    </div>
+  </div>
+  <div class="homeGrid">
+    <div class="homeCard" onclick="switchMain('deneme')"><div style="font-size:28px">📊</div><b>Denemelerim</b><span id="hDeneme">Grafik & Liste</span></div>
+    <div class="homeCard" onclick="switchMain('pomodoro')"><div style="font-size:28px">🍅</div><b>Pomodoro</b><span id="hPomo">Odaklan çalış</span></div>
+    <div class="homeCard" onclick="switchMain('soru')"><div style="font-size:28px">📸</div><b>Soru Çöz</b><span>Foto → AI</span></div>
+    <div class="homeCard" onclick="switchMain('defterim')"><div style="font-size:28px">📓</div><b>Defterim</b><span id="hDefter">Yeni</span></div>
+  </div>
+  <div class="card"><b style="font-size:13px">🔥 Bugün</b><div id="homeOzet" style="margin-top:8px;font-size:12px;color:#475569;line-height:1.6"></div></div>
+  <div class="card"><b style="font-size:13px">💾 Yedek</b>
+    <p style="font-size:10px;color:#64748b;margin-top:4px">Telefonu değiştirirsen ya da uygulamayı silersen verilerin gider. Yedeği Drive'a veya WhatsApp'ta kendine gönder; gerekirse &quot;Yedeği Yükle&quot; ile geri getir. Foto ve PDF'ler yedeğe dahil değil.</p><p id="backupInfo" style="font-size:11px;font-weight:800;margin-top:8px"></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <button class="btn-ai" onclick="exportData()">📤 Yedekle / Paylaş</button>
+      <button class="btn-ai" onclick="$('importInput').click()">⬆️ Yedeği Yükle</button>
+    </div>
+    <input id="importInput" type="file" accept="application/json" hidden onchange="importData(this)">
+  </div>
+  <p style="text-align:center;font-size:10px;color:#94a3b8;margin:4px 20px 0;line-height:1.7">Bu uygulama ÖSYM veya başka bir kurumla bağlantılı değildir.<br><a href="privacy.html" style="color:#64748b">Gizlilik Politikası</a></p>
+</div>
+
+<div id="main-deneme" class="hidden">
+  <div class="card">
+    <div class="subTabs">
+      <div class="subTab active" id="subBrans" onclick="switchDenemeTip('brans')">Branş Denemesi</div>
+      <div class="subTab" id="subGenel" onclick="switchDenemeTip('genel')">Genel Deneme (120)</div>
+    </div>
+    <div id="bransForm">
+      <label>Ders Seç (Grafikte sadece bu görünecek)</label>
+      <select id="bransDers" onchange="onBransDersChange()"></select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <div><label>Doğru</label><input id="bDogru" type="number" min="0" placeholder="0"></div>
+        <div><label>Yanlış</label><input id="bYanlis" type="number" min="0" placeholder="0"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;background:#0f172a;color:white;padding:10px 12px;border-radius:10px;margin-top:10px">
+        <span style="font-size:11px;opacity:.7">Net</span><b id="bNet">0.00</b>
+      </div>
+    </div>
+    <div id="genelForm" style="display:none">
+      <div id="genelInputs"></div>
+      <div style="display:flex;justify-content:space-between;background:#1e40af;color:white;padding:12px;border-radius:10px;margin-top:10px">
+        <span>TOPLAM NET</span><b id="gToplamNet" style="font-size:18px">0.00</b>
+      </div>
+    </div>
+    <label style="margin-top:12px">Deneme Adı / Tarih</label>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:8px">
+      <input id="denemeAd" placeholder="Örn: Pegem TG-5"><input id="tarih" type="date">
+    </div>
+    <button class="btn" onclick="kaydet()">Kaydet</button>
+  </div>
+  <div class="card">
+    <div class="filterRow">
+      <b style="font-size:13px;flex:1">📈 Branş Denemesi Grafiği</b>
+      <select id="bransFilter" onchange="renderAll()"></select>
+    </div>
+    <div class="chartWrap"><canvas id="bransChart"></canvas></div>
+    <div id="bransListe" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <b style="font-size:13px">📈 Genel Deneme Grafiği (Toplam Net)</b>
+    <div class="chartWrap" style="margin-top:10px"><canvas id="genelChart"></canvas></div>
+    <div id="genelListe" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<div id="main-pomodoro" class="hidden">
+  <div class="card" style="text-align:center">
+    <b>🍅 Pomodoro Sayacı</b>
+    <div class="pomoCircle" id="pomoCircle"><div class="pomoTime" id="pomoTime">25:00</div><div class="pomoLabel" id="pomoLabel">ÇALIŞMA</div></div>
+    <div style="display:flex;gap:8px;justify-content:center"><span style="font-size:11px;background:#f1f5f9;padding:6px 10px;border-radius:20px">Seans: <b id="pSession">0</b></span><span style="font-size:11px;background:#dcfce7;padding:6px 10px;border-radius:20px">Bugün: <b id="pToday">0dk</b></span></div>
+    <div class="pomoBtns"><button class="pomoBtn" style="background:#0f172a;color:white" id="pStartBtn" onclick="togglePomo()">BAŞLAT</button><button class="pomoBtn" style="background:#f1f5f9" onclick="resetPomo()">Sıfırla</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><button class="btn-ai" onclick="setPomoTime(25)">25 / 5 Klasik</button><button class="btn-ai" onclick="setPomoTime(50)">50 / 10 Derin</button></div>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-top:12px;text-align:left">
+      <b style="font-size:11px">⏱️ Kendi Süreni Belirle</b>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        <div><label style="margin:0 0 4px 0">Çalışma (dk)</label><input id="customWork" type="number" value="25"></div>
+        <div><label style="margin:0 0 4px 0">Mola (dk)</label><input id="customBreak" type="number" value="5"></div>
+      </div>
+      <button class="btn" style="margin-top:8px;padding:10px;font-size:12px;background:#1e40af" onclick="setCustomPomo()">Uygula</button>
+    </div>
+  </div>
+  <div class="card"><b style="font-size:12px">📊 Geçmiş</b><div id="pomoHistory" style="margin-top:8px"></div></div>
+</div>
+
+<div id="main-soru" class="hidden">
+  <div class="card">
+    <b>📸 Takıldığın Soruyu Çek</b>
+    <p style="font-size:11px;color:#64748b;margin:8px 0 12px">Fotoğrafı çek, AI uygulamasına paylaş, çözümü al.</p>
+    <div class="upload-box" onclick="$('soruInput').click()"><div style="font-size:28px">📷</div><b style="font-size:12px">Fotoğraf Çek / Seç</b></div>
+    <input id="soruInput" type="file" accept="image/*" hidden onchange="handleImage(this)">
+    <div id="previewArea" class="hidden" style="margin-top:14px"><img id="previewImg" style="width:100%;border-radius:12px;border:1px solid #e2e8f0"><textarea id="soruNot" rows="2" style="margin-top:10px" placeholder="Not: Örn: Tarih Osmanlı"></textarea>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn-ai" onclick="openAI('chatgpt')">💬 ChatGPT</button><button class="btn-ai" onclick="openAI('gemini')">✨ Gemini</button><button class="btn-ai" onclick="openAI('claude')">🧠 Claude</button><button class="btn-ai" onclick="openAI('perplexity')">🔍 Perplexity</button></div>
+      <p style="font-size:10px;color:#64748b;margin-top:8px">Telefonda paylaşım menüsü açılır; fotoğraf doğrudan seçtiğin uygulamaya gider.</p></div>
+  </div>
+</div>
+
+<div id="main-defterim" class="hidden">
+  <div class="card">
+    <b>📓 Defterim</b>
+    <div class="subTabs" style="margin-top:10px">
+      <div class="subTab active" id="subSorular" onclick="switchDefterSub('sorular')">Sorular</div>
+      <div class="subTab" id="subDokuman" onclick="switchDefterSub('dokuman')">Dokümanlarım</div>
+      <div class="subTab" id="subCalisma" onclick="switchDefterSub('calisma')">Çalışma Sayfam</div>
+    </div>
+  </div>
+
+  <div id="defter-sorular">
+    <div class="card">
+      <b style="font-size:13px">➕ Yanlış Soru Kaydet</b>
+      <label>Soru Fotoğrafı</label>
+      <div class="upload-box" onclick="$('yanlisSoruInput').click()" style="padding:14px"><span style="font-size:11px;font-weight:700">📷 Soru Foto Seç</span><br><img id="yanlisSoruPrev" class="hidden" style="width:100%;margin-top:8px;border-radius:10px"></div>
+      <input id="yanlisSoruInput" type="file" accept="image/*" hidden onchange="handleYanlis(this,'soru')">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div><label>Ders</label><select id="yanlisDers" class="dersSel"></select></div>
+        <div><label>Konu</label><input id="yanlisKonu" placeholder="Örn: Paragraf"></div>
+      </div>
+      <label style="margin-top:10px">Çözüm (Foto veya Yazı)</label>
+      <div class="upload-box" onclick="$('yanlisCozumInput').click()" style="padding:12px;margin-bottom:8px"><span style="font-size:11px">📸 Çözüm Foto (opsiyonel)</span><br><img id="yanlisCozumPrev" class="hidden" style="width:100%;margin-top:8px;border-radius:10px"></div>
+      <input id="yanlisCozumInput" type="file" accept="image/*" hidden onchange="handleYanlis(this,'cozum')">
+      <textarea id="yanlisCozumYazi" rows="3" placeholder="Çözümü buraya yazabilirsin..."></textarea>
+      <button class="btn" onclick="kaydetYanlis()">Deftere Kaydet</button>
+    </div>
+    <div class="card">
+      <div class="filterRow"><b style="font-size:13px;flex:1">📚 Kayıtlı Sorularım</b><select id="yanlisFilter" class="dersSel all" onchange="renderYanlislar()"></select></div>
+      <div id="yanlisListe"></div>
+    </div>
+  </div>
+
+  <div id="defter-dokuman" class="hidden">
+    <div class="card">
+      <b style="font-size:13px">➕ PDF Ekle</b>
+      <label>PDF Dosyası</label>
+      <div class="upload-box" onclick="$('dokumanPdfInput').click()" style="padding:14px"><span style="font-size:11px;font-weight:700">📄 PDF Seç</span><br><span id="dokumanPdfName" style="font-size:10px;color:#1e40af;margin-top:6px;display:block;font-weight:700"></span></div>
+      <input id="dokumanPdfInput" type="file" accept="application/pdf" hidden onchange="handleDokumanPdf(this)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div><label>Ders</label><select id="dokumanDers" class="dersSel genel"></select></div>
+        <div><label>İsim</label><input id="dokumanAd" placeholder="Örn: Notlar"></div>
+      </div>
+      <button class="btn" style="background:#1e40af" onclick="kaydetDokuman()">PDF'i Kaydet</button>
+    </div>
+    <div class="card">
+      <div class="filterRow"><b style="font-size:13px;flex:1">📁 Dokümanlarım</b><select id="dokumanFilter" class="dersSel all genel" onchange="renderDokumanlar()"></select></div>
+      <div id="dokumanListe"></div>
+    </div>
+  </div>
+
+  <div id="defter-calisma" class="hidden">
+    <div class="card">
+      <b style="font-size:13px">✏️ Çalışma Sayfam - Defter</b>
+      <p style="font-size:10px;color:#64748b;margin:4px 0 10px">Parmağınla veya kalemle yaz</p>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn-ai" onclick="setPen('#0f172a')">✏️ Siyah</button>
+        <button class="btn-ai" onclick="setPen('#1e40af')">🔵 Mavi</button>
+        <button class="btn-ai" onclick="setPen('#dc2626')">🔴 Kırmızı</button>
+        <button class="btn-ai" onclick="setPen(null,2)">İnce</button>
+        <button class="btn-ai" onclick="setPen(null,5)">Kalın</button>
+      </div>
+      <canvas id="calismaCanvas" class="notebook"></canvas>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <button class="btn" style="background:#1e40af" onclick="saveCanvas()">💾 Kaydet (Foto)</button>
+        <button class="btn" style="background:#f1f5f9;color:#0f172a" onclick="clearCanvas()">🗑️ Temizle</button>
+      </div>
+      <div id="calismaKayitlar" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="main-kaynak" class="hidden">
+  <div class="card"><b>📺 Önerilen YouTube Kanalları</b><div style="margin-top:10px" id="ytList"></div></div>
+  <div class="card"><b>📚 Önerilen Yayınlar</b><div style="margin-top:10px" id="yayinList"></div></div>
+  <div class="card" style="font-size:11px;color:#64748b;line-height:1.6"> UYARI: Bu listeler kişisel önerilerdir; resmî değildir, sıralama veya puan içermez. İçerik sahipleriyle bir bağlantımız yoktur. Kaynakların niteliği tamamen kişisel tercihlere bağlıdır.</div>
+</div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const DERSLER={"Türkçe":30,"Matematik":30,"Tarih":27,"Coğrafya":18,"Vatandaşlık":9,"Güncel":6};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fmtDate=t=>t?t.slice(8)+'.'+t.slice(5,7)+'.'+t.slice(2,4):'';
+const lsGet=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch{return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{toast('Depolama dolu, kayıt yapılamadı!');return false}};
+let tT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2500)}
+
+// ---------- IndexedDB (foto, pdf, çizim) ----------
+let _db;
+const dbp=()=>_db||(_db=new Promise((res,rej)=>{const r=indexedDB.open('kpss',1);r.onupgradeneeded=()=>{['yanlis','dokuman','canvas'].forEach(s=>r.result.createObjectStore(s,{keyPath:'id'}))};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+const tx=async(s,m,f)=>{const d=await dbp();return new Promise((res,rej)=>{const t=d.transaction(s,m);const q=f(t.objectStore(s));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})};
+const dbPut=(s,o)=>tx(s,'readwrite',x=>x.put(o));
+const dbAll=s=>tx(s,'readonly',x=>x.getAll());
+const dbGet=(s,id)=>tx(s,'readonly',x=>x.get(id));
+const dbDel=(s,id)=>tx(s,'readwrite',x=>x.delete(id));
+const dbCount=s=>tx(s,'readonly',x=>x.count());
+const U={};const rv=k=>{(U[k]||[]).forEach(URL.revokeObjectURL);U[k]=[]};
+const mk=(k,b)=>{if(!b)return'';const u=URL.createObjectURL(b);(U[k]=U[k]||[]).push(u);return u};
+function compress(file,max=1400){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const r=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=img.width*r;c.height=img.height*r;c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(),'image/jpeg',.82)};img.onerror=()=>rej();img.src=u})}
+// Eski localStorage verisini IndexedDB'ye taşı
+async function migrate(){
+  const f=async u=>u?await (await fetch(u)).blob():null;
+  for(const [k,s] of [['yanlis_defteri','yanlis'],['dokumanlar_defteri','dokuman'],['calisma_canvas','canvas']]){
+    const a=lsGet(k,[]);if(!a.length)continue;
+    try{
+      for(const o of a){
+        if(s==='yanlis')await dbPut(s,{id:o.id,ders:o.ders,konu:o.konu,soru:await f(o.soruFoto),cozum:await f(o.cozumFoto),cozumYazi:o.cozumYazi,tarih:o.tarih});
+        else if(s==='dokuman')await dbPut(s,{id:o.id,ders:o.ders,ad:o.ad,pdf:await f(o.pdf),tarih:o.tarih});
+        else await dbPut(s,{id:o.id,img:await f(o.img),tarih:o.tarih});
+      }
+      localStorage.removeItem(k);
+    }catch(e){console.warn('migrate',k,e)}
+  }
+}
+
+// ---------- Başlangıç ----------
+const dersOpts=(all,genel)=>(all?'<option value="Tümü">Tümü</option>':'')+Object.keys(DERSLER).map(d=>`<option>${d}</option>`).join('')+(genel?'<option>Genel</option>':'');
+document.querySelectorAll('.dersSel').forEach(s=>s.innerHTML=dersOpts(s.classList.contains('all'),s.classList.contains('genel')));
+$('bransDers').innerHTML=Object.keys(DERSLER).map(d=>`<option value="${d}">${d} (${DERSLER[d]} Soru)</option>`).join('');
+$('bransFilter').innerHTML=dersOpts();
+$('tarih').value=todayStr();
+$('homeDate').innerText=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
+
+const YT_KANALLAR=[
+  {ad:"Benim Hocam - Ramazan Yetgin",ders:"Tarih",not:"Tarih için #1",puan:9.8,icon:"📜"},
+  {ad:"İlyas Güneş",ders:"Coğrafya",not:"Harita kodlama kralı",puan:9.7,icon:"🌍"},
+  {ad:"Öznur Saat Yıldırım",ders:"Türkçe",not:"Paragraf taktikleri",puan:9.6,icon:"🇹🇷"},
+  {ad:"Mehmet Bilge Yıldız",ders:"Vatandaşlık",not:"Güncel mevzuat",puan:9.5,icon:"⚖️"},
+  {ad:"Tarihin Pusulası",ders:"Tarih",not:"Hızlı tekrar serisi",puan:9.4,icon:"🧭"},
+  {ad:"Coğrafya Hocası - Bayram Meral",ders:"Coğrafya",not:"Ezber değil mantık",puan:9.3,icon:"🗺️"},
+  {ad:"Rüştü Hoca",ders:"Türkçe",not:"Dil bilgisi efsanesi",puan:9.4,icon:"📝"},
+  {ad:"Kadir Gümüş",ders:"Türkçe",not:"Paragraf kampı",puan:9.2,icon:"📖"},
+  {ad:"İbrahim Hoca - İlyas",ders:"Matematik",not:"KPSS matematiği",puan:9.3,icon:"🔢"},
+  {ad:"Engin Eraydın",ders:"Coğrafya",not:"Harita çalışması",puan:9.1,icon:"🏔️"},
+  {ad:"Esra Özkan Karaoğlu",ders:"Vatandaşlık",not:"Anayasa detay",puan:9.2,icon:"📚"},
+  {ad:"Hoca Kafası - Tarih",ders:"Tarih",not:"Soru çözüm",puan:9.0,icon:"🎯"},
+  {ad:"Yavuz Tuna - Matematik",ders:"Matematik",not:"Pratik yollar",puan:9.0,icon:"✖️"},
+  {ad:"Güncel Bilgi - ÖSYM Tadında",ders:"Güncel",not:"Her ay güncellenir",puan:9.1,icon:"📰"},
+  {ad:"Benim Hocam - Genel Tekrar",ders:"Genel",not:"Tüm dersler",puan:9.5,icon:"⭐"},
+];
+const YAYINLAR=[
+  {ad:"Pegem Türkiye Geneli",tur:"Deneme",not:"En zorlayıcı, sınav ayarı",puan:9.8},
+  {ad:"Yediiklim Soru Bankası",tur:"Soru Bankası",not:"ÖSYM tarzına en yakın",puan:9.7},
+  {ad:"İSEM - Çıkmış Sorular",tur:"Çıkmış",not:"Son 12 yıl analizli",puan:9.6},
+  {ad:"Benim Hocam - Soru Bankası",tur:"Soru Bankası",not:"Konu + soru",puan:9.4},
+  {ad:"Data - Yaprak Test",tur:"Yaprak Test",not:"Branş bazlı",puan:9.2},
+  {ad:"Hoca Kafası - Deneme",tur:"Deneme",not:"Yeni nesil",puan:9.3},
+  {ad:"Yargı - Modüler Set",tur:"Set",not:"6 ders tek set",puan:9.1},
+  {ad:"İhtiyaç - Deneme Kulübü",tur:"Deneme",not:"15'li TG",puan:9.0},
+  {ad:"Karakutu - İnformal",tur:"Soru Bankası",not:"ÖSYM arşivi",puan:9.5},
+  {ad:"Uzman Kariyer - Güncel",tur:"Güncel",not:"Güncel için tek kaynak",puan:9.0},
+];
+
+// ---------- Deneme ----------
+let tip='brans';
+let denemeler=lsGet('kpss_v3',[]);
+const saveDen=()=>lsSet('kpss_v3',denemeler);
+const netOf=(d,y)=>d-y/4;
+function switchDenemeTip(t){
+  tip=t;
+  $('subBrans').classList.toggle('active',t==='brans');$('subGenel').classList.toggle('active',t==='genel');
+  $('bransForm').style.display=t==='brans'?'block':'none';$('genelForm').style.display=t==='genel'?'block':'none';
+  if(t==='genel')buildGenelInputs();
+}
+function onBransDersChange(){$('bransFilter').value=$('bransDers').value;calcBrans();renderAll()}
+function buildGenelInputs(){
+  $('genelInputs').innerHTML=Object.keys(DERSLER).map(d=>`
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between"><b style="font-size:12px">${d} (${DERSLER[d]})</b><span id="net-${d}" style="font-size:10px;background:#f1f5f9;padding:3px 6px;border-radius:8px">0.00 net</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+        <input id="g-dogru-${d}" type="number" min="0" placeholder="Doğru" oninput="calcGenel()">
+        <input id="g-yanlis-${d}" type="number" min="0" placeholder="Yanlış" oninput="calcGenel()">
+      </div></div>`).join('');
+}
+const num=id=>Math.max(0,parseInt($(id)?.value)||0);
+function calcGenel(){
+  let t=0;
+  Object.keys(DERSLER).forEach(d=>{const n=netOf(num('g-dogru-'+d),num('g-yanlis-'+d));t+=n;$('net-'+d).innerText=n.toFixed(2)+' net'});
+  $('gToplamNet').innerText=t.toFixed(2);
+}
+function calcBrans(){$('bNet').innerText=netOf(num('bDogru'),num('bYanlis')).toFixed(2)}
+$('bDogru').addEventListener('input',calcBrans);$('bYanlis').addEventListener('input',calcBrans);
+
+function kaydet(){
+  const tarih=$('tarih').value||todayStr();
+  const ad=$('denemeAd').value.trim()||`${tip==='brans'?'Branş':'Genel'} ${denemeler.length+1}`;
+  if(tip==='brans'){
+    const ders=$('bransDers').value,dogru=num('bDogru'),yanlis=num('bYanlis');
+    if(!dogru&&!yanlis)return toast('Doğru/yanlış gir');
+    if(dogru+yanlis>DERSLER[ders])return toast(`${ders} en fazla ${DERSLER[ders]} soru`);
+    denemeler.push({tip:'brans',ders,dogru,yanlis,net:netOf(dogru,yanlis),ad,tarih,ts:Date.now()});
+    $('bDogru').value='';$('bYanlis').value='';calcBrans();
+  }else{
+    const detay={};let toplamNet=0,var_=false;
+    for(const d of Object.keys(DERSLER)){
+      const dg=num('g-dogru-'+d),yg=num('g-yanlis-'+d);
+      if(dg+yg>DERSLER[d])return toast(`${d} en fazla ${DERSLER[d]} soru`);
+      if(dg||yg)var_=true;
+      const n=netOf(dg,yg);detay[d]={dogru:dg,yanlis:yg,net:n};toplamNet+=n;
+    }
+    if(!var_)return toast('En az bir ders gir');
+    denemeler.push({tip:'genel',detay,toplamNet,ad,tarih,ts:Date.now()});
+    buildGenelInputs();calcGenel();
+  }
+  saveDen();$('denemeAd').value='';renderAll();renderHome();toast('Kaydedildi ✓');
+}
+function delDeneme(ts){if(!confirm('Silinsin mi?'))return;denemeler=denemeler.filter(x=>x.ts!==ts);saveDen();renderAll();renderHome()}
+const byDate=(a,b)=>(a.tarih||'').localeCompare(b.tarih||'')||a.ts-b.ts;
+const item=(ad,alt,ts)=>`<div class="item"><div><b style="font-size:12px">${esc(ad)}</b><br><span style="font-size:10px;color:#64748b">${alt}</span></div><button class="del" onclick="delDeneme(${ts})">Sil</button></div>`;
+let bransChart,genelChart;
+function mkChart(old,id,labels,data,label,color,bg){
+  if(old)old.destroy();
+  if(typeof Chart==='undefined')return null;
+  return new Chart($(id).getContext('2d'),{type:'line',data:{labels,datasets:[{label,data,borderColor:color,backgroundColor:bg,tension:.4,fill:true,borderWidth:2.5,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+}
+function renderAll(){
+  const ders=$('bransFilter').value;
+  const b=denemeler.filter(d=>d.tip==='brans'&&d.ders===ders).sort(byDate);
+  $('bransListe').innerHTML=b.length?`<p style="font-size:11px;color:#64748b;margin-bottom:6px">${ders} - ${b.length} deneme</p>`+[...b].reverse().map(d=>item(d.ad,`${d.dogru}D ${d.yanlis}Y - Net: ${d.net.toFixed(2)} - ${fmtDate(d.tarih)}`,d.ts)).join(''):`<p style="text-align:center;color:#94a3b8;font-size:11px;padding:12px">${ders} için henüz deneme yok</p>`;
+  bransChart=mkChart(bransChart,'bransChart',b.map(d=>fmtDate(d.tarih)),b.map(d=>d.net),ders,'#1e40af','rgba(30,64,175,.12)');
+  const g=denemeler.filter(d=>d.tip==='genel').sort(byDate);
+  genelChart=mkChart(genelChart,'genelChart',g.map(d=>fmtDate(d.tarih)),g.map(d=>d.toplamNet),'Toplam Net','#0f172a','rgba(15,23,42,.08)');
+  $('genelListe').innerHTML=g.length?[...g].reverse().map(d=>item(d.ad,`Toplam: ${d.toplamNet.toFixed(2)} - ${fmtDate(d.tarih)}`,d.ts)).join(''):'<p style="text-align:center;color:#94a3b8;font-size:11px;padding:12px">Genel deneme yok</p>';
+}
+
+// ---------- Gezinme / Anasayfa ----------
+function switchMain(id){
+  ['anasayfa','deneme','pomodoro','soru','kaynak','defterim'].forEach(k=>{$('main-'+k).classList.add('hidden');$('tab-'+k).classList.remove('active')});
+  $('main-'+id).classList.remove('hidden');$('tab-'+id).classList.add('active');
+  if(id==='deneme'){setTimeout(()=>{bransChart&&bransChart.resize();genelChart&&genelChart.resize()},50)}
+  if(id==='anasayfa')renderHome();
+  if(id==='kaynak')renderKaynak();
+  if(id==='defterim'){renderYanlislar();renderDokumanlar();renderCanvasKayitlar()}
+  scrollTo(0,0);
+}
+async function renderHome(){
+  const today=todayStr(),focus=lsGet('pomo_today_'+today,0);
+  let y=0,dk=0;try{y=await dbCount('yanlis');dk=await dbCount('dokuman')}catch{}
+  $('homeStats').innerText=`${denemeler.length} deneme • ${focus}dk odak`;
+  $('hDeneme').innerText=`${denemeler.length} kayıt • ${denemeler.filter(d=>d.tip==='brans').length} branş`;
+  $('hPomo').innerText=`Bugün ${focus}dk • ${lsGet('pomo_session',0)} seans`;
+  $('hDefter').innerText=`${y} soru • ${dk} pdf`;
+  const lb=lsGet('last_backup',0),bi=$('backupInfo');
+  if(bi){const g=lb?Math.floor((Date.now()-lb)/864e5):null;
+    bi.innerHTML=lb?(g>=7?`⚠️ Son yedek ${g} gün önce. Yeniden yedekle.`:`✓ Son yedek: ${g===0?'bugün':g+' gün önce'}`):'⚠️ Henüz yedek almadın.';
+    bi.style.color=(!lb||g>=7)?'#b45309':'#166534'}
+  const son=[...denemeler].sort((a,b)=>a.ts-b.ts).pop();
+  $('homeOzet').innerHTML=son?`• Son: <b>${esc(son.ad)}</b> (${son.tip==='brans'?esc(son.ders)+' '+son.net.toFixed(2)+' net':'Genel '+son.toplamNet.toFixed(2)+' net'})<br>• Bugün ${denemeler.filter(d=>d.tarih===today).length} deneme • ${focus}dk odak • ${y} yanlış • ${dk} doküman`:'Henüz deneme yok. İlkini ekle!';
+}
+function renderKaynak(){
+  $('ytList').innerHTML=YT_KANALLAR.map(k=>`<div class="kaynak"><div style="width:36px;height:36px;background:#f1f5f9;border-radius:10px;display:flex;align-items:center;justify-content:center">${k.icon}</div><div style="flex:1"><b style="font-size:12px">${k.ad}</b><br><span style="font-size:10px;color:#64748b">${k.ders} • ${k.not}</span></div></div>`).join('');
+  $('yayinList').innerHTML=YAYINLAR.map(y=>`<div class="kaynak"><div style="width:36px;height:36px;background:#fef3c7;border-radius:10px;display:flex;align-items:center;justify-content:center">📘</div><div style="flex:1"><b style="font-size:12px">${y.ad}</b><br><span style="font-size:10px;color:#64748b">${y.tur} • ${y.not}</span></div></div>`).join('');
+}
+
+// ---------- Yedek ----------
+async function exportData(){
+  const d={v:1,denemeler,pomo_history:lsGet('pomo_history',[]),pomo_session:lsGet('pomo_session',0)};
+  const f=new File([JSON.stringify(d)],`kpss-yedek-${todayStr()}.json`,{type:'application/json'});
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'KPSS Yedeği'});lsSet('last_backup',Date.now());renderHome();toast('Yedek gönderildi ✓');return}}catch(e){if(e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+  lsSet('last_backup',Date.now());renderHome();toast('Yedek indirildi ✓');
+}
+function importData(inp){
+  const f=inp.files[0];if(!f)return;
+  f.text().then(t=>{
+    const d=JSON.parse(t);if(!Array.isArray(d.denemeler))throw 0;
+    const have=new Set(denemeler.map(x=>x.ts));let n=0;
+    d.denemeler.forEach(x=>{if(!have.has(x.ts)){denemeler.push(x);n++}});
+    saveDen();if(Array.isArray(d.pomo_history)&&!lsGet('pomo_history',[]).length)lsSet('pomo_history',d.pomo_history);
+    renderAll();renderHome();toast(`${n} deneme eklendi`);
+  }).catch(()=>toast('Geçersiz yedek dosyası'));
+  inp.value='';
+}
+
+// ---------- Pomodoro (bitiş zamanı bazlı) ----------
+let P=Object.assign({work:25,brk:5,isBreak:false,running:false,end:0,left:25*60},lsGet('pomo_state',{}));
+let pHist=lsGet('pomo_history',[]),pt=null;
+const pLeft=()=>P.running?Math.max(0,Math.ceil((P.end-Date.now())/1000)):P.left;
+const pSave=()=>lsSet('pomo_state',P);
+function pDisp(){
+  const s=pLeft();
+  $('pomoTime').innerText=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  $('pomoLabel').innerText=P.isBreak?'MOLA':'ÇALIŞMA';
+  $('pomoCircle').style.borderColor=P.isBreak?'#bbf7d0':'#bfdbfe';
+  $('pStartBtn').innerText=P.running?'DURAKLAT':(P.left<(P.isBreak?P.brk:P.work)*60?'DEVAM':'BAŞLAT');
+}
+function pTick(){pLeft()<=0?pDone():pDisp()}
+function togglePomo(){
+  if(P.running){P.left=pLeft();P.running=false;clearInterval(pt)}
+  else{P.end=Date.now()+P.left*1000;P.running=true;clearInterval(pt);pt=setInterval(pTick,500)}
+  pSave();pDisp();
+}
+function pDone(){
+  clearInterval(pt);P.running=false;playAlarm();
+  if(!P.isBreak){
+    const k='pomo_today_'+todayStr();lsSet(k,lsGet(k,0)+P.work);lsSet('pomo_session',lsGet('pomo_session',0)+1);
+    pHist.push({tarih:new Date().toLocaleString('tr-TR'),sure:P.work});pHist=pHist.slice(-50);lsSet('pomo_history',pHist);
+    toast(`Harika! ${P.work}dk odaklandın. ${P.brk}dk mola`);
+  }else toast('Mola bitti, devam!');
+  P.isBreak=!P.isBreak;P.left=(P.isBreak?P.brk:P.work)*60;pSave();pDisp();renderPomoHistory();renderHome();
+}
+function resetPomo(){clearInterval(pt);P.running=false;P.isBreak=false;P.left=P.work*60;pSave();pDisp()}
+function setPomoTime(w){P.work=w;P.brk=w===25?5:10;resetPomo()}
+function setCustomPomo(){
+  const w=parseInt($('customWork').value)||25,b=parseInt($('customBreak').value)||5;
+  if(w<1||w>120)return toast('Çalışma 1-120 dk olmalı');if(b<1||b>60)return toast('Mola 1-60 dk olmalı');
+  P.work=w;P.brk=b;resetPomo();
+}
+function playAlarm(){
+  try{const C=new(window.AudioContext||window.webkitAudioContext)();C.resume&&C.resume();
+    [0,.35,.7].forEach(t=>{const o=C.createOscillator(),g=C.createGain(),s=C.currentTime+t;o.frequency.value=880;o.connect(g);g.connect(C.destination);g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.4,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+.25);o.start(s);o.stop(s+.3)})}catch(e){}
+  navigator.vibrate&&navigator.vibrate([300,100,300,100,500]);
+}
+function renderPomoHistory(){
+  const c=$('pomoHistory');
+  c.innerHTML=pHist.length?[...pHist].reverse().slice(0,8).map(h=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:8px 0;border-bottom:1px solid #f1f5f9"><span>${esc(h.tarih)}</span><b>${h.sure}dk</b></div>`).join(''):'<p style="font-size:11px;color:#94a3b8;text-align:center">Henüz seans yok</p>';
+  $('pToday').innerText=lsGet('pomo_today_'+todayStr(),0)+'dk';$('pSession').innerText=lsGet('pomo_session',0);
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&P.running)pTick()});
+
+// ---------- Soru Çöz ----------
+let soruFile=null,soruUrl='';
+function handleImage(inp){
+  const f=inp.files[0];if(!f)return;soruFile=f;
+  if(soruUrl)URL.revokeObjectURL(soruUrl);soruUrl=URL.createObjectURL(f);
+  $('previewImg').src=soruUrl;$('previewArea').classList.remove('hidden');
+}
+async function openAI(t){
+  const urls={chatgpt:'https://chat.openai.com/',gemini:'https://gemini.google.com/app',claude:'https://claude.ai/new',perplexity:'https://www.perplexity.ai/'};
+  const prompt='Bu KPSS sorusunu detaylı çöz, doğru cevabı ve nedenini açıkla. Not: '+($('soruNot').value||'');
+  try{await navigator.clipboard.writeText(prompt)}catch{}
+  if(soruFile&&navigator.canShare&&navigator.canShare({files:[soruFile]})){
+    try{await navigator.share({files:[soruFile],text:prompt});return}catch(e){if(e.name==='AbortError')return}
+  }
+  window.open(urls[t],'_blank');toast('Prompt kopyalandı, fotoğrafı uygulamaya ekle');
+}
+
+// ---------- Defterim: Sorular ----------
+let yFile={soru:null,cozum:null};
+async function handleYanlis(inp,k){
+  const f=inp.files[0];if(!f)return;
+  try{yFile[k]=await compress(f)}catch{return toast('Fotoğraf okunamadı')}
+  const img=$(k==='soru'?'yanlisSoruPrev':'yanlisCozumPrev');img.src=URL.createObjectURL(yFile[k]);img.classList.remove('hidden');
+}
+async function kaydetYanlis(){
+  if(!yFile.soru)return toast('Soru fotoğrafı seç');
+  try{
+    await dbPut('yanlis',{id:Date.now(),ders:$('yanlisDers').value,konu:$('yanlisKonu').value.trim(),soru:yFile.soru,cozum:yFile.cozum,cozumYazi:$('yanlisCozumYazi').value.trim(),tarih:new Date().toLocaleDateString('tr-TR')});
+  }catch{return toast('Kayıt başarısız (depolama dolu olabilir)')}
+  yFile={soru:null,cozum:null};$('yanlisKonu').value='';$('yanlisCozumYazi').value='';
+  ['yanlisSoruPrev','yanlisCozumPrev'].forEach(i=>$(i).classList.add('hidden'));$('yanlisSoruInput').value='';$('yanlisCozumInput').value='';
+  renderYanlislar();renderHome();toast('Deftere kaydedildi ✓');
+}
+async function renderYanlislar(){
+  rv('y');const f=$('yanlisFilter').value;
+  const data=(await dbAll('yanlis')).filter(y=>f==='Tümü'||y.ders===f).sort((a,b)=>b.id-a.id);
+  $('yanlisListe').innerHTML=data.length?data.map(y=>`
+    <div style="border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin-bottom:10px;background:#fcfdff">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;background:#0f172a;color:white;padding:4px 8px;border-radius:20px;font-weight:800">${esc(y.ders)}${y.konu?' - '+esc(y.konu):''}</span><span style="font-size:10px;color:#94a3b8">${esc(y.tarih)}</span></div>
+      <img src="${mk('y',y.soru)}" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid #e2e8f0">
+      ${y.cozum?`<div style="margin-top:8px"><span style="font-size:10px;font-weight:800;color:#166534">Çözüm Foto:</span><img src="${mk('y',y.cozum)}" style="width:100%;border-radius:10px;margin-top:4px;border:1px solid #bbf7d0"></div>`:''}
+      ${y.cozumYazi?`<div style="margin-top:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px;font-size:12px;white-space:pre-wrap">${esc(y.cozumYazi)}</div>`:''}
+      <div style="text-align:right;margin-top:8px"><button class="del" onclick="yanlisSil(${y.id})">Sil</button></div>
+    </div>`).join(''):'<p style="text-align:center;color:#94a3b8;font-size:11px;padding:12px">Henüz kayıt yok</p>';
+}
+async function yanlisSil(id){if(!confirm('Silinsin mi?'))return;await dbDel('yanlis',id);renderYanlislar();renderHome()}
+
+// ---------- Defterim: Dokümanlar ----------
+let pdfFile=null;
+function handleDokumanPdf(inp){
+  const f=inp.files[0];if(!f)return;
+  if(f.size>50*1024*1024){inp.value='';return toast('PDF çok büyük (max 50MB)')}
+  pdfFile=f;$('dokumanPdfName').innerText=f.name;
+}
+async function kaydetDokuman(){
+  if(!pdfFile)return toast('PDF seç');
+  try{await dbPut('dokuman',{id:Date.now(),ders:$('dokumanDers').value,ad:$('dokumanAd').value.trim()||pdfFile.name,pdf:pdfFile,tarih:new Date().toLocaleDateString('tr-TR')})}
+  catch{return toast('Kayıt başarısız (depolama dolu olabilir)')}
+  pdfFile=null;$('dokumanAd').value='';$('dokumanPdfName').innerText='';$('dokumanPdfInput').value='';
+  renderDokumanlar();renderHome();toast('PDF kaydedildi ✓');
+}
+async function renderDokumanlar(){
+  const f=$('dokumanFilter').value;
+  const data=(await dbAll('dokuman')).filter(d=>f==='Tümü'||d.ders===f).sort((a,b)=>b.id-a.id);
+  $('dokumanListe').innerHTML=data.length?data.map(d=>`
+    <div style="border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin-bottom:10px;background:#fffbeb;display:flex;gap:10px;align-items:center">
+      <div style="width:40px;height:40px;background:#fef3c7;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">📄</div>
+      <div style="flex:1"><b style="font-size:12px">${esc(d.ad)}</b><br><span style="font-size:10px;color:#64748b">${esc(d.ders)} • ${esc(d.tarih)} • ${(d.pdf.size/1048576).toFixed(2)} MB</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><button onclick="openDokuman(${d.id})" style="background:#0f172a;color:white;border:none;padding:6px 10px;border-radius:8px;font-size:10px;font-weight:800">AÇ</button><button class="del" onclick="dokumanSil(${d.id})">Sil</button></div>
+    </div>`).join(''):'<p style="text-align:center;color:#94a3b8;font-size:11px;padding:12px">Henüz PDF yok</p>';
+}
+async function openDokuman(id){
+  const w=window.open('','_blank');const d=await dbGet('dokuman',id);if(!d){w&&w.close();return}
+  const u=URL.createObjectURL(d.pdf);
+  if(w)w.location=u;else location.href=u;
+  setTimeout(()=>URL.revokeObjectURL(u),120000);
+}
+async function dokumanSil(id){if(!confirm('Silinsin mi?'))return;await dbDel('dokuman',id);renderDokumanlar();renderHome()}
+
+// ---------- Defterim: Çalışma sayfası ----------
+let cv,cx,drawing=false,pen='#0f172a',pw=3,cvInit=false;
+function initCanvas(){
+  cv=$('calismaCanvas');const r=cv.getBoundingClientRect();
+  if(cvInit||!r.width)return;cvInit=true;
+  cv.width=r.width*2;cv.height=1000;cx=cv.getContext('2d');cx.scale(2,2);cx.lineCap=cx.lineJoin='round';
+  const pos=e=>{const b=cv.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};
+  cv.addEventListener('pointerdown',e=>{drawing=true;cv.setPointerCapture(e.pointerId);const p=pos(e);cx.strokeStyle=pen;cx.lineWidth=pw;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x+.01,p.y);cx.stroke()});
+  cv.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);cx.lineTo(p.x,p.y);cx.stroke()});
+  ['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,()=>{drawing=false}));
+}
+function setPen(c,w){if(c)pen=c;if(w)pw=w}
+function clearCanvas(){if(cx)cx.clearRect(0,0,cv.width,cv.height)}
+function saveCanvas(){
+  if(!cv||!cvInit)return;
+  const t=document.createElement('canvas');t.width=cv.width;t.height=cv.height;const c=t.getContext('2d');
+  c.fillStyle='#fff';c.fillRect(0,0,t.width,t.height);c.fillStyle='#e0e7ff';
+  for(let y=56;y<t.height;y+=56)c.fillRect(0,y-2,t.width,2);
+  c.drawImage(cv,0,0);
+  t.toBlob(async b=>{
+    try{await dbPut('canvas',{id:Date.now(),img:b,tarih:new Date().toLocaleString('tr-TR')});renderCanvasKayitlar();toast('Kaydedildi ✓')}
+    catch{toast('Kayıt başarısız')}
+  },'image/png');
+}
+async function renderCanvasKayitlar(){
+  rv('c');const data=(await dbAll('canvas')).sort((a,b)=>b.id-a.id);
+  $('calismaKayitlar').innerHTML=data.length?'<b style="font-size:11px">📒 Kaydedilen Çalışmalar</b>'+data.map(c=>`
+    <div style="border:1px solid #e2e8f0;border-radius:12px;padding:8px;margin-top:8px;background:white">
+      <img src="${mk('c',c.img)}" style="width:100%;border-radius:8px;border:1px solid #f1f5f9">
+      <div style="display:flex;justify-content:space-between;margin-top:6px"><span style="font-size:10px;color:#64748b">${esc(c.tarih)}</span><button class="del" onclick="canvasSil(${c.id})">Sil</button></div>
+    </div>`).join(''):'';
+}
+async function canvasSil(id){if(!confirm('Silinsin mi?'))return;await dbDel('canvas',id);renderCanvasKayitlar()}
+function switchDefterSub(t){
+  ['sorular','dokuman','calisma'].forEach(k=>{$('sub'+k[0].toUpperCase()+k.slice(1)).classList.toggle('active',t===k);$('defter-'+k).classList.toggle('hidden',t!==k)});
+  if(t==='calisma')setTimeout(initCanvas,50);
+}
+
+// ---------- Başlat ----------
+buildGenelInputs();renderAll();renderKaynak();renderPomoHistory();pDisp();
+if(P.running){pt=setInterval(pTick,500);pTick()}
+migrate().finally(()=>{renderHome();renderYanlislar();renderDokumanlar();renderCanvasKayitlar()});
+navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
