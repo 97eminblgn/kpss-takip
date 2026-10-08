@@ -1,8 +1,10 @@
-const CACHE='kpss-pro-v11';
+const CACHE='kpss-pro-v18';
 const FILES=['./','./index.html','./manifest.json','./chart.umd.js','./icon-192.png','./icon-512.png','./privacy.html'];
-const put=(r,res)=>{if(res&&res.ok){const cp=res.clone();caches.open(CACHE).then(c=>c.put(r,cp))}return res};
+// Netlify yönlendirme (301) yaptığında "redirected" işaretli cevap sayfa açılışında hataya yol açar; işareti temizle
+const clean=async r=>r.redirected?new Response(await r.blob(),{status:200,statusText:'OK',headers:r.headers}):r;
+const save=(req,res)=>{if(res&&res.ok){const cp=res.clone();clean(cp).then(x=>caches.open(CACHE).then(c=>c.put(req,x))).catch(()=>{})}return res};
 self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>Promise.all(FILES.map(f=>c.add(f).catch(()=>{})))));
+  e.waitUntil(Promise.all(FILES.map(f=>fetch(f).then(r=>save(f,r)).catch(()=>{}))));
   self.skipWaiting();
 });
 self.addEventListener('activate',e=>{
@@ -11,10 +13,9 @@ self.addEventListener('activate',e=>{
 self.addEventListener('fetch',e=>{
   const r=e.request;
   if(r.method!=='GET'||!r.url.startsWith(self.location.origin))return;
-  if(r.mode==='navigate'||r.url.endsWith('index.html')){
-    e.respondWith(fetch(r).then(res=>put(r,res)).catch(()=>caches.match(r).then(m=>m||caches.match('./index.html'))));
+  if(r.mode==='navigate'){
+    e.respondWith(fetch(r).then(res=>save(r,res)).catch(()=>caches.match(r,{ignoreSearch:true}).then(m=>m||caches.match('./index.html')||caches.match('./'))));
   }else{
-    // sadece başarılı (200) cevaplar önbelleğe alınır
-    e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>put(r,res))));
+    e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>save(r,res))));
   }
 });

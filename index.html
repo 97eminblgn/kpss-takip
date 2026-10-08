@@ -60,17 +60,52 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 [id^="main-"]:not(.hidden){animation:fadeUp .28s ease-out}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.heroCard{background:linear-gradient(135deg,#0b1220,#1e40af 70%,#3b5bfd);color:#fff;border:none}
+.heroTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.heroLbl{font-size:10px;font-weight:800;letter-spacing:1.5px;opacity:.7}
+.examNum{font-size:50px;font-weight:900;letter-spacing:-2px;line-height:1}
+.examUnit{font-size:15px;opacity:.85;margin-left:6px;font-weight:700}
+.examCta{border:1.5px dashed rgba(255,255,255,.55);background:rgba(255,255,255,.1);color:#fff;font-weight:800;font-size:13px;padding:11px 14px;border-radius:14px;cursor:pointer}
+.streakBadge{text-align:center;background:rgba(255,255,255,.14);padding:10px 16px;border-radius:18px;min-width:80px}
+.streakBadge div{font-size:26px}.streakBadge b{display:block;font-size:26px;line-height:1.1}.streakBadge small{font-size:10px;opacity:.8}
+.heroBar{height:10px;background:rgba(255,255,255,.2);border-radius:10px;margin-top:6px;overflow:hidden}
+.heroBar div{height:100%;width:0;background:#5eead4;border-radius:10px;transition:width .4s}
+.heroBar.light{background:#eef1f8}.heroBar.light div{background:linear-gradient(90deg,#3b5bfd,#14b8a6)}
+.heroNote{font-size:11px;opacity:.8;margin-top:10px;line-height:1.6}
+.konuTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 18px}
+.lessonTile{border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:12px;font-weight:800;color:var(--ink);transition:.15s}
+.lessonTile.on{border-color:var(--blue2);background:#f2f5ff;box-shadow:0 6px 18px rgba(59,91,253,.18)}
+.lessonTile small{font-size:10px;color:var(--mute);font-weight:700}
+.ring{width:48px;height:48px;border-radius:50%;background:conic-gradient(#3b5bfd calc(var(--p)*1%),#e8ecf6 0);display:grid;place-items:center}
+.ring span{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:18px}
+.konuHead{display:flex;justify-content:space-between;align-items:baseline}
+.konuHead b{font-size:16px;letter-spacing:-.3px}.konuHead span{font-size:11px;color:var(--mute);font-weight:700}
+.konuRow{display:flex;align-items:center;gap:14px;padding:13px 14px;border:1.5px solid var(--line);border-radius:16px;margin:0 0 8px;background:#fff;text-transform:none;font-size:14px;font-weight:600;color:var(--ink);letter-spacing:0;cursor:pointer;transition:.15s}
+.konuRow input{-webkit-appearance:none;appearance:none;width:26px;height:26px;padding:0;flex:none;border-radius:9px;border:2px solid #cbd5e1;background:#fff;display:grid;place-items:center;box-shadow:none}
+.konuRow input:checked{background:linear-gradient(135deg,#3b5bfd,#14b8a6);border-color:transparent}
+.konuRow input:checked::after{content:"✓";color:#fff;font-size:15px;font-weight:900}
+.konuRow.done{background:#f3fbf8;border-color:#c6efdd}
+.konuRow.done span{color:#64748b;text-decoration:line-through;text-decoration-color:#a8b3c7}
+.yolRow{margin-bottom:14px}
+.yolTop{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
+.yolTop em{color:#0d9488;font-style:normal;font-weight:900}
+.yolBar{height:12px;background:#eef1f8;border-radius:10px;overflow:hidden;display:flex}
+.yolBar i{display:block;background:linear-gradient(90deg,#3b5bfd,#5b7bff)}
+.yolBar u{display:block;background:repeating-linear-gradient(45deg,#5eead4,#5eead4 6px,#99f6e4 6px,#99f6e4 12px)}
+.yolSum{font-size:14px;line-height:1.7;margin:0 0 14px}
+.pl{display:block;font-size:11px;color:var(--mute);font-weight:700;margin-top:2px;text-decoration:none}
+.muted{font-size:12px;color:#64748b;line-height:1.6;margin:8px 0}
 </style>
 </head>
 <body>
-<div class="header"><h1>KPSS Takip+ Pro</h1><p style="font-size:11px;opacity:.7">Anasayfa • Deneme • Pomodoro • Defterim • Kaynak Tavsiyesi</p></div>
+<div class="header"><h1>KPSS Takip+ Pro</h1><p style="font-size:11px;opacity:.7">Anasayfa • Deneme • Pomodoro • Defterim • Kaynak</p></div>
 <div class="tabs">
-  <div class="tab active" id="tab-anasayfa" onclick="switchMain('anasayfa')"><i>🏠</i><span>Ana Menü</span></div>
-  <div class="tab" id="tab-deneme" onclick="switchMain('deneme')"><i>📊</i><span>Deneme Sonuçları</span></div>
-  <div class="tab" id="tab-pomodoro" onclick="switchMain('pomodoro')"><i>🍅</i><span>Pomodoro</span></div>
-  <div class="tab" id="tab-soru" onclick="switchMain('soru')"><i>📸</i><span>Soru</span></div>
+  <div class="tab active" id="tab-anasayfa" onclick="switchMain('anasayfa')"><i>🏠</i><span>Ana</span></div>
+  <div class="tab" id="tab-deneme" onclick="switchMain('deneme')"><i>📊</i><span>Deneme</span></div>
+  <div class="tab" id="tab-pomodoro" onclick="switchMain('pomodoro')"><i>🍅</i><span>Pomo</span></div>
+  <div class="tab" id="tab-soru" onclick="switchMain('soru')"><i>🎯</i><span>Hedef</span></div>
   <div class="tab" id="tab-defterim" onclick="switchMain('defterim')"><i>📓</i><span>Defterim</span></div>
-  <div class="tab" id="tab-kaynak" onclick="switchMain('kaynak')"><i>📚</i><span>Kaynak Tavsiyesi</span></div>
+  <div class="tab" id="tab-kaynak" onclick="switchMain('kaynak')"><i>📚</i><span>Kaynak</span></div>
 </div>
 
 <div id="main-anasayfa">
@@ -83,7 +118,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
   <div class="homeGrid">
     <div class="homeCard" onclick="switchMain('deneme')"><div style="font-size:28px">📊</div><b>Denemelerim</b><span id="hDeneme">Grafik & Liste</span></div>
     <div class="homeCard" onclick="switchMain('pomodoro')"><div style="font-size:28px">🍅</div><b>Pomodoro</b><span id="hPomo">Odaklan çalış</span></div>
-    <div class="homeCard" onclick="switchMain('soru')"><div style="font-size:28px">📸</div><b>Soru Çöz</b><span>Foto → AI</span></div>
+    <div class="homeCard" onclick="switchMain('soru')"><div style="font-size:28px">🎯</div><b>Hedefim</b><span id="hHedef">Seri & hedef</span></div>
     <div class="homeCard" onclick="switchMain('defterim')"><div style="font-size:28px">📓</div><b>Defterim</b><span id="hDefter">Yeni</span></div>
   </div>
   <div class="card"><b style="font-size:13px">🔥 Bugün</b><div id="homeOzet" style="margin-top:8px;font-size:12px;color:#475569;line-height:1.6"></div></div>
@@ -129,7 +164,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
   </div>
   <div class="card">
     <div class="filterRow">
-      <b style="font-size:13px;flex:1">📈 Branş Denemesi Grafiği</b>
+      <b style="font-size:13px;flex:1">📈 Branş Grafiği</b>
       <select id="bransFilter" onchange="renderAll()"></select>
     </div>
     <div class="chartWrap"><canvas id="bransChart"></canvas></div>
@@ -162,14 +197,38 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
 </div>
 
 <div id="main-soru" class="hidden">
+  <div class="card heroCard">
+    <div class="heroTop">
+      <div><div class="heroLbl">SINAVA KALAN</div><div id="examBox" style="margin-top:6px"></div></div>
+      <div class="streakBadge"><div>📋</div><b id="planBadge">0/3</b><small>günün planı</small></div>
+    </div>
+    <div id="heroGoal" class="heroNote" style="font-size:13px;margin-top:14px"></div>
+  </div>
   <div class="card">
-    <b>📸 Takıldığın Soruyu Çek</b>
-    <p style="font-size:11px;color:#64748b;margin:8px 0 12px">Fotoğrafı çek, AI uygulamasına paylaş, çözümü al.</p>
-    <div class="upload-box" onclick="$('soruInput').click()"><div style="font-size:28px">📷</div><b style="font-size:12px">Fotoğraf Çek / Seç</b></div>
-    <input id="soruInput" type="file" accept="image/*" hidden onchange="handleImage(this)">
-    <div id="previewArea" class="hidden" style="margin-top:14px"><img id="previewImg" style="width:100%;border-radius:12px;border:1px solid #e2e8f0"><textarea id="soruNot" rows="2" style="margin-top:10px" placeholder="Not: Örn: Tarih Osmanlı"></textarea>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn-ai" onclick="openAI('chatgpt')">💬 ChatGPT</button><button class="btn-ai" onclick="openAI('gemini')">✨ Gemini</button><button class="btn-ai" onclick="openAI('claude')">🧠 Claude</button><button class="btn-ai" onclick="openAI('perplexity')">🔍 Perplexity</button></div>
-      <p style="font-size:10px;color:#64748b;margin-top:8px">Telefonda paylaşım menüsü açılır; fotoğraf doğrudan seçtiğin uygulamaya gider.</p></div>
+    <b style="font-size:13px">⚙️ Hedeflerim</b>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label>Sınav Tarihi</label><input id="examDate" type="date" onchange="saveHedef()"></div>
+      <div><label>Hedef Net (120 üzerinden)</label><input id="goalNet" type="number" step="0.5" min="0" max="120" placeholder="Örn: 85" onchange="saveHedef()"></div>
+    </div>
+    <p class="muted">Değişiklikler otomatik kaydedilir. Hedef netini girince Net Yol Haritası hazırlanır.</p>
+  </div>
+  <div class="card">
+    <div class="konuHead"><b style="font-size:13px">📋 Günün Planı</b><span id="planInfo"></span></div>
+    <p id="planMsg" class="muted"></p>
+    <div id="planListe"></div>
+    <button class="btn-ai" style="width:100%;margin-top:4px" onclick="newPlan()">↻ Planı yenile</button>
+  </div>
+  <div class="card">
+    <b style="font-size:13px">🧭 Net Yol Haritası</b>
+    <div id="yolBox" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <b style="font-size:13px">✅ Konu Takibi</b>
+    <p id="konuAll" style="font-size:12px;color:#475569;margin:6px 0 0"></p>
+    <div id="konuTabs" class="konuTabs"></div>
+    <div class="konuHead"><b id="konuTitle"></b><span id="konuInfo"></span></div>
+    <div class="heroBar light" style="margin:6px 0 14px"><div id="konuBar"></div></div>
+    <div id="konuListe"></div>
   </div>
 </div>
 
@@ -247,7 +306,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
 <div id="main-kaynak" class="hidden">
   <div class="card"><b>📺 Önerilen YouTube Kanalları</b><div style="margin-top:10px" id="ytList"></div></div>
   <div class="card"><b>📚 Önerilen Yayınlar</b><div style="margin-top:10px" id="yayinList"></div></div>
-  <div class="card" style="font-size:11px;color:#64748b;line-height:1.6"> UYARI: Bu listeler kişisel önerilerdir; resmî değildir, sıralama veya puan içermez. İçerik sahipleriyle bir bağlantımız yoktur. Kaynakların niteliği tamamen kişisel tercihlere bağlıdır.</div>
+  <div class="card" style="font-size:11px;color:#64748b;line-height:1.6">Bu listeler kişisel önerilerdir; resmî değildir, sıralama veya puan içermez. İçerik sahipleriyle bir bağlantımız yoktur. Kaynakları kendin de araştır.</div>
 </div>
 <div id="toast"></div>
 
@@ -298,33 +357,30 @@ $('tarih').value=todayStr();
 $('homeDate').innerText=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'short'});
 
 const YT_KANALLAR=[
-  {ad:"Benim Hocam - Ramazan Yetgin",ders:"Tarih",not:"Tarih için #1",puan:9.8,icon:"📜"},
-  {ad:"İlyas Güneş",ders:"Coğrafya",not:"Harita kodlama kralı",puan:9.7,icon:"🌍"},
-  {ad:"Öznur Saat Yıldırım",ders:"Türkçe",not:"Paragraf taktikleri",puan:9.6,icon:"🇹🇷"},
-  {ad:"Mehmet Bilge Yıldız",ders:"Vatandaşlık",not:"Güncel mevzuat",puan:9.5,icon:"⚖️"},
-  {ad:"Tarihin Pusulası",ders:"Tarih",not:"Hızlı tekrar serisi",puan:9.4,icon:"🧭"},
-  {ad:"Coğrafya Hocası - Bayram Meral",ders:"Coğrafya",not:"Ezber değil mantık",puan:9.3,icon:"🗺️"},
-  {ad:"Rüştü Hoca",ders:"Türkçe",not:"Dil bilgisi efsanesi",puan:9.4,icon:"📝"},
-  {ad:"Kadir Gümüş",ders:"Türkçe",not:"Paragraf kampı",puan:9.2,icon:"📖"},
-  {ad:"İbrahim Hoca - İlyas",ders:"Matematik",not:"KPSS matematiği",puan:9.3,icon:"🔢"},
-  {ad:"Engin Eraydın",ders:"Coğrafya",not:"Harita çalışması",puan:9.1,icon:"🏔️"},
-  {ad:"Esra Özkan Karaoğlu",ders:"Vatandaşlık",not:"Anayasa detay",puan:9.2,icon:"📚"},
-  {ad:"Hoca Kafası - Tarih",ders:"Tarih",not:"Soru çözüm",puan:9.0,icon:"🎯"},
-  {ad:"Yavuz Tuna - Matematik",ders:"Matematik",not:"Pratik yollar",puan:9.0,icon:"✖️"},
-  {ad:"Güncel Bilgi - ÖSYM Tadında",ders:"Güncel",not:"Her ay güncellenir",puan:9.1,icon:"📰"},
-  {ad:"Benim Hocam - Genel Tekrar",ders:"Genel",not:"Tüm dersler",puan:9.5,icon:"⭐"},
+  {ad:"İlyas Güneş",ders:"Matematik",not:"KPSS matematik konu ve soru çözümü",icon:"🔢"},
+  {ad:"Mehmet Bilge Yıldız",ders:"Matematik",not:"Matematik konu anlatımı",icon:"➗"},
+  {ad:"Rüştü Hoca",ders:"Türkçe",not:"Türkçe konu anlatımı",icon:"📝"},
+  {ad:"Kadir Gümüş",ders:"Türkçe",not:"Türkçe konu anlatımı",icon:"📖"},
+  {ad:"Öznur Saat Yıldırım",ders:"Türkçe",not:"Türkçe konu anlatımı",icon:"🇹🇷"},
+  {ad:"Benim Hocam - Ramazan Yetgin",ders:"Tarih",not:"Tarih konu anlatımı",icon:"📜"},
+  {ad:"Hoca Kafası - Tarih",ders:"Tarih",not:"Tarih konu anlatımı",icon:"🏛️"},
+  {ad:"Yavuz Tuna",ders:"Coğrafya",not:"Coğrafya konu anlatımı",icon:"🌍"},
+  {ad:"Coğrafya Hocası - Bayram Meral",ders:"Coğrafya",not:"Harita üzerinden anlatım",icon:"🗺️"},
+  {ad:"Engin Eraydın",ders:"Coğrafya",not:"Haritalarla coğrafya",icon:"🏔️"},
+  {ad:"Esra Özkan Karaoğlu",ders:"Vatandaşlık",not:"Vatandaşlık konu anlatımı",icon:"⚖️"},
+  {ad:"Benim Hocam",ders:"Genel",not:"Tüm dersler için konu anlatımı",icon:"⭐"},
 ];
 const YAYINLAR=[
-  {ad:"Pegem Türkiye Geneli",tur:"Deneme",not:"En zorlayıcı, sınav ayarı",puan:9.8},
-  {ad:"Yediiklim Soru Bankası",tur:"Soru Bankası",not:"ÖSYM tarzına en yakın",puan:9.7},
-  {ad:"İSEM - Çıkmış Sorular",tur:"Çıkmış",not:"Son 12 yıl analizli",puan:9.6},
-  {ad:"Benim Hocam - Soru Bankası",tur:"Soru Bankası",not:"Konu + soru",puan:9.4},
-  {ad:"Data - Yaprak Test",tur:"Yaprak Test",not:"Branş bazlı",puan:9.2},
-  {ad:"Hoca Kafası - Deneme",tur:"Deneme",not:"Yeni nesil",puan:9.3},
-  {ad:"Yargı - Modüler Set",tur:"Set",not:"6 ders tek set",puan:9.1},
-  {ad:"İhtiyaç - Deneme Kulübü",tur:"Deneme",not:"15'li TG",puan:9.0},
-  {ad:"Karakutu - İnformal",tur:"Soru Bankası",not:"ÖSYM arşivi",puan:9.5},
-  {ad:"Uzman Kariyer - Güncel",tur:"Güncel",not:"Güncel için tek kaynak",puan:9.0},
+{ad:"Pegem Türkiye Geneli",tur:"Deneme",not:"En zorlayıcı, sınav ayarı"},
+  {ad:"Yediiklim Soru Bankası",tur:"Soru Bankası",not:"ÖSYM tarzına en yakın"},
+  {ad:"İSEM - Çıkmış Sorular",tur:"Çıkmış",not:"Son 12 yıl analizli"},
+  {ad:"Benim Hocam - Soru Bankası",tur:"Soru Bankası",not:"Konu + soru"},
+  {ad:"Data - Yaprak Test",tur:"Yaprak Test",not:"Branş bazlı"},
+  {ad:"Hoca Kafası - Deneme",tur:"Deneme",not:"Yeni nesil"},
+  {ad:"Yargı - Modüler Set",tur:"Set",not:"6 ders tek set"},
+  {ad:"KR Akademi - Türkiye Geneli",tur:"Deneme",not:"Yeni nesil ÖSYM formatı"},
+  {ad:"Karakutu - İnformal",tur:"Soru Bankası",not:"ÖSYM arşivi"},
+  {ad:"Uzman Kariyer - Güncel",tur:"Güncel",not:"Güncel için tek kaynak"}
 ];
 
 // ---------- Deneme ----------
@@ -405,12 +461,13 @@ function switchMain(id){
   $('main-'+id).classList.remove('hidden');$('tab-'+id).classList.add('active');
   if(id==='deneme'){setTimeout(()=>{bransChart&&bransChart.resize();genelChart&&genelChart.resize()},50)}
   if(id==='anasayfa')renderHome();
+  if(id==='soru')renderHedef();
   if(id==='kaynak')renderKaynak();
   if(id==='defterim'){renderYanlislar();renderDokumanlar();renderCanvasKayitlar()}
   scrollTo(0,0);
 }
 async function renderHome(){
-  const today=todayStr(),focus=lsGet('pomo_today_'+today,0);
+  const today=todayStr(),focus=focusOf(today);
   let y=0,dk=0;try{y=await dbCount('yanlis');dk=await dbCount('dokuman')}catch{}
   $('homeStats').innerText=`${denemeler.length} deneme • ${focus}dk odak`;
   $('hDeneme').innerText=`${denemeler.length} kayıt • ${denemeler.filter(d=>d.tip==='brans').length} branş`;
@@ -420,6 +477,7 @@ async function renderHome(){
   if(bi){const g=lb?Math.floor((Date.now()-lb)/864e5):null;
     bi.innerHTML=lb?(g>=7?`⚠️ Son yedek ${g} gün önce. Yeniden yedekle.`:`✓ Son yedek: ${g===0?'bugün':g+' gün önce'}`):'⚠️ Henüz yedek almadın.';
     bi.style.color=(!lb||g>=7)?'#b45309':'#166534'}
+  if(window.renderHedef)renderHedef();
   const son=[...denemeler].sort((a,b)=>a.ts-b.ts).pop();
   $('homeOzet').innerHTML=son?`• Son: <b>${esc(son.ad)}</b> (${son.tip==='brans'?esc(son.ders)+' '+son.net.toFixed(2)+' net':'Genel '+son.toplamNet.toFixed(2)+' net'})<br>• Bugün ${denemeler.filter(d=>d.tarih===today).length} deneme • ${focus}dk odak • ${y} yanlış • ${dk} doküman`:'Henüz deneme yok. İlkini ekle!';
 }
@@ -430,7 +488,8 @@ function renderKaynak(){
 
 // ---------- Yedek ----------
 async function exportData(){
-  const d={v:1,denemeler,pomo_history:lsGet('pomo_history',[]),pomo_session:lsGet('pomo_session',0)};
+  const pd={};Object.keys(localStorage).filter(k=>k.startsWith('pomo_today_')||k.startsWith('man_today_')).forEach(k=>pd[k]=lsGet(k,0));
+  const d={v:2,denemeler,pomo_history:lsGet('pomo_history',[]),pomo_session:lsGet('pomo_session',0),pomo_days:pd,konu:lsGet('konu_durum',{}),goal_min:lsGet('goal_min',120),exam_date:lsGet('exam_date','')};
   const f=new File([JSON.stringify(d)],`kpss-yedek-${todayStr()}.json`,{type:'application/json'});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'KPSS Yedeği'});lsSet('last_backup',Date.now());renderHome();toast('Yedek gönderildi ✓');return}}catch(e){if(e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
@@ -443,6 +502,10 @@ function importData(inp){
     const have=new Set(denemeler.map(x=>x.ts));let n=0;
     d.denemeler.forEach(x=>{if(!have.has(x.ts)){denemeler.push(x);n++}});
     saveDen();if(Array.isArray(d.pomo_history)&&!lsGet('pomo_history',[]).length)lsSet('pomo_history',d.pomo_history);
+    if(d.pomo_days)Object.keys(d.pomo_days).forEach(k=>{if(localStorage.getItem(k)===null)lsSet(k,d.pomo_days[k])});
+    if(d.konu&&!Object.keys(lsGet('konu_durum',{})).length)lsSet('konu_durum',d.konu);
+    if(d.goal_min&&localStorage.getItem('goal_min')===null)lsSet('goal_min',d.goal_min);
+    if(d.exam_date&&localStorage.getItem('exam_date')===null)lsSet('exam_date',d.exam_date);
     renderAll();renderHome();toast(`${n} deneme eklendi`);
   }).catch(()=>toast('Geçersiz yedek dosyası'));
   inp.value='';
@@ -493,23 +556,6 @@ function renderPomoHistory(){
   $('pToday').innerText=lsGet('pomo_today_'+todayStr(),0)+'dk';$('pSession').innerText=lsGet('pomo_session',0);
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&P.running)pTick()});
-
-// ---------- Soru Çöz ----------
-let soruFile=null,soruUrl='';
-function handleImage(inp){
-  const f=inp.files[0];if(!f)return;soruFile=f;
-  if(soruUrl)URL.revokeObjectURL(soruUrl);soruUrl=URL.createObjectURL(f);
-  $('previewImg').src=soruUrl;$('previewArea').classList.remove('hidden');
-}
-async function openAI(t){
-  const urls={chatgpt:'https://chat.openai.com/',gemini:'https://gemini.google.com/app',claude:'https://claude.ai/new',perplexity:'https://www.perplexity.ai/'};
-  const prompt='Bu KPSS sorusunu detaylı çöz, doğru cevabı ve nedenini açıkla. Not: '+($('soruNot').value||'');
-  try{await navigator.clipboard.writeText(prompt)}catch{}
-  if(soruFile&&navigator.canShare&&navigator.canShare({files:[soruFile]})){
-    try{await navigator.share({files:[soruFile],text:prompt});return}catch(e){if(e.name==='AbortError')return}
-  }
-  window.open(urls[t],'_blank');toast('Prompt kopyalandı, fotoğrafı uygulamaya ekle');
-}
 
 // ---------- Defterim: Sorular ----------
 let yFile={soru:null,cozum:null};
@@ -609,6 +655,98 @@ async function canvasSil(id){if(!confirm('Silinsin mi?'))return;await dbDel('can
 function switchDefterSub(t){
   ['sorular','dokuman','calisma'].forEach(k=>{$('sub'+k[0].toUpperCase()+k.slice(1)).classList.toggle('active',t===k);$('defter-'+k).classList.toggle('hidden',t!==k)});
   if(t==='calisma')setTimeout(initCanvas,50);
+}
+
+// ---------- Hedef: sınav, seri, konu takibi ----------
+const KONULAR={
+"Türkçe":["Sözcükte Anlam","Cümlede Anlam","Paragrafta Anlam","Ses Bilgisi","Yapı Bilgisi","Sözcük Türleri","Cümle Bilgisi","Fiilimsiler","Yazım Kuralları","Noktalama İşaretleri","Anlatım Bozuklukları","Sözel Mantık"],
+"Matematik":["Temel Kavramlar","Sayı Basamakları","Bölme ve Bölünebilme","EBOB - EKOK","Rasyonel Sayılar","Üslü ve Köklü Sayılar","Çarpanlara Ayırma","Denklemler ve Eşitsizlikler","Oran - Orantı","Yüzdeler","Problemler","Kümeler","Permütasyon, Kombinasyon, Olasılık","Tablo ve Grafikler","Temel Geometri"],
+"Tarih":["İslamiyet Öncesi Türk Tarihi","İlk Türk-İslam Devletleri","Osmanlı Kuruluş ve Yükselme","Osmanlı Duraklama ve Gerileme","Osmanlı Kültür ve Medeniyeti","XIX. Yüzyıl Osmanlı","Milli Mücadele Hazırlık Dönemi","Kurtuluş Savaşı","Atatürk İnkılapları","Atatürk İlkeleri","Atatürk Dönemi Dış Politika","Çağdaş Türk ve Dünya Tarihi"],
+"Coğrafya":["Türkiye'nin Coğrafi Konumu","Yerşekilleri","İklim","Bitki Örtüsü","Nüfus ve Yerleşme","Tarım","Hayvancılık","Madenler ve Enerji","Sanayi","Ulaşım ve Ticaret","Turizm","Bölgeler Coğrafyası"],
+"Vatandaşlık":["Hukukun Temel Kavramları","Devlet Biçimleri","Anayasa Hukuku","1982 Anayasası Temel İlkeler","Yasama","Yürütme","Yargı","Temel Hak ve Özgürlükler","İdare Hukuku","Uluslararası Kuruluşlar"],
+"Güncel":["Türkiye Gündemi","Dünya Gündemi","Kültür ve Sanat","Bilim ve Teknoloji","Ekonomi","Spor"]
+};
+const dKey=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const focusOf=k=>lsGet('pomo_today_'+k,0)+lsGet('man_today_'+k,0);
+function saveHedef(){
+  const raw=$('goalNet').value,n=parseFloat(raw);
+  if(raw!==''&&(isNaN(n)||n<0||n>120)){toast('Hedef net 0-120 arası olmalı');return}
+  if(raw==='')localStorage.removeItem('goal_net');else lsSet('goal_net',n);
+  const e=$('examDate').value;if(e)lsSet('exam_date',e);else localStorage.removeItem('exam_date');
+  renderHedef();toast('Kaydedildi ✓');
+}
+function focusExam(){const i=$('examDate');i.scrollIntoView({behavior:'smooth',block:'center'});try{i.showPicker()}catch(e){i.focus()}}
+// Her dersin son 3 sonucunun ortalaması (branş + genel denemelerden); verisi olmayan ders = null
+function levels(){
+  const by={};Object.keys(DERSLER).forEach(d=>by[d]=[]);
+  [...denemeler].sort(byDate).forEach(x=>{
+    if(x.tip==='brans'){if(by[x.ders])by[x.ders].push(x.net)}
+    else if(x.tip==='genel'&&x.detay)Object.keys(DERSLER).forEach(d=>{const t=x.detay[d];if(t&&(t.dogru||t.yanlis))by[d].push(t.net)});
+  });
+  const out={};Object.keys(by).forEach(d=>{const a=by[d].slice(-3);out[d]=a.length?a.reduce((s,v)=>s+v,0)/a.length:null});
+  return out;
+}
+// En zayıftan güçlüye ders sırası (veri yoksa nötr kabul edilir)
+function weakOrder(){const lv=levels(),r=d=>lv[d]===null?.5:lv[d]/DERSLER[d];return Object.keys(DERSLER).sort((a,b)=>r(a)-r(b))}
+function planList(){
+  const k='plan_'+dKey(0);let p=lsGet(k,null);
+  if(Array.isArray(p))return p;
+  Object.keys(localStorage).filter(x=>x.startsWith('plan_')&&x!==k).forEach(x=>localStorage.removeItem(x));
+  const s=konuDone(),order=weakOrder(),used=new Set();p=[];
+  const pick=d=>{const i=KONULAR[d].findIndex(t=>!s[d+'|'+t]&&!used.has(d+'|'+t));if(i<0)return false;used.add(d+'|'+KONULAR[d][i]);p.push({d,k:KONULAR[d][i]});return true};
+  [order[0],order[0],order[1]].forEach(d=>{if(!pick(d))for(const o of order){if(pick(o))break}});
+  lsSet(k,p);return p;
+}
+function newPlan(){localStorage.removeItem('plan_'+dKey(0));renderPlan();toast('Plan yenilendi')}
+function togglePlan(i){const x=planList()[i],s=konuDone(),key=x.d+'|'+x.k;if(s[key])delete s[key];else s[key]=1;lsSet('konu_durum',s);renderPlan();renderKonu()}
+function renderPlan(){
+  if(!$('planListe'))return;
+  const p=planList(),s=konuDone(),done=p.filter(x=>s[x.d+'|'+x.k]).length;
+  $('planBadge').innerText=`${done}/${p.length}`;$('planInfo').innerText=p.length?`${done}/${p.length} tamam`:'';
+  $('planMsg').innerText=!p.length?'':(done===p.length?'Günün planı bitti 🎉':'Zayıf derslerinden seçtim, bugün bunlara odaklan.');
+  $('planListe').innerHTML=p.length?p.map((x,i)=>{const c=s[x.d+'|'+x.k];return `<label class="konuRow${c?' done':''}"><input type="checkbox" ${c?'checked':''} onchange="togglePlan(${i})"><span>${LESSON[x.d]} ${esc(x.k)}<small class="pl">${x.d}</small></span></label>`}).join(''):'<p class="muted">Tüm konuları bitirmişsin 🎉</p>';
+}
+function renderYol(){
+  const g=lsGet('goal_net',null),lv=levels(),ds=Object.keys(DERSLER),have=ds.filter(d=>lv[d]!==null),box=$('yolBox');
+  if(!have.length){box.innerHTML='<p class="muted">Yol haritası denemelerinden hazırlanır. Önce bir deneme ekle.</p><button class="btn-ai" style="width:100%" onclick="switchMain(\'deneme\')">📊 Deneme Ekle</button>';return}
+  const cur=have.reduce((s,d)=>s+lv[d],0);
+  if(g===null){box.innerHTML=`<p class="yolSum">Şu anki ortalaman <b>${cur.toFixed(1)} net</b>. Yukarıya <b>hedef netini</b> yazarsan sana yol haritası çıkarırım.</p>`;return}
+  const gap=g-cur,head={};let hs=0;
+  have.forEach(d=>{head[d]=Math.max(0,DERSLER[d]-lv[d]);hs+=head[d]});
+  const need={};have.forEach(d=>need[d]=gap>0&&hs>0?Math.min(head[d],gap*head[d]/hs):0);
+  const weak=[...have].sort((a,b)=>lv[a]/DERSLER[a]-lv[b]/DERSLER[b])[0];
+  let sum=gap<=0?`🎉 Ortalaman <b>${cur.toFixed(1)}</b> net; hedefin olan <b>${g}</b> neti şu an geçiyorsun. Çıtayı yükseltebilirsin.`:`Ortalaman <b>${cur.toFixed(1)}</b>, hedefin <b>${g}</b>. Hedefe <b>${gap.toFixed(1)} net</b> kaldı.`;
+  if(gap>0)sum+=`<br>En çok gelişmen gereken ders: <b>${LESSON[weak]} ${weak}</b>.`;
+  if(gap>hs+.05)sum+='<br>⚠️ Bu hedef, denemesini çözdüğün derslerin toplam puanını aşıyor.';
+  const miss=ds.filter(d=>lv[d]===null);
+  if(miss.length)sum+=`<br><span style="color:#b45309">${miss.join(', ')} için henüz deneme yok, hesaba katılmadı.</span>`;
+  box.innerHTML=`<p class="yolSum">${sum}</p>`+have.map(d=>`<div class="yolRow"><div class="yolTop"><span>${LESSON[d]} ${d}</span><span>${lv[d].toFixed(1)} / ${DERSLER[d]}${need[d]>.05?` <em>+${need[d].toFixed(1)}</em>`:''}</span></div><div class="yolBar"><i style="width:${lv[d]/DERSLER[d]*100}%"></i><u style="width:${need[d]/DERSLER[d]*100}%"></u></div></div>`).join('')+'<p class="muted">Ortalamalar her dersin son 3 sonucundan hesaplanır. Çizgili kısım, hedefe ulaşmak için kazanman gereken neti gösterir.</p>';
+}
+function renderHedef(){
+  if(!$('examBox'))return;
+  const e=lsGet('exam_date',''),gn=lsGet('goal_net',null);
+  if(document.activeElement!==$('examDate'))$('examDate').value=e;
+  if(document.activeElement!==$('goalNet'))$('goalNet').value=gn===null?'':gn;
+  let d=null;if(e)d=Math.round((new Date(e+'T00:00:00')-new Date(dKey(0)+'T00:00:00'))/864e5);
+  $('examBox').innerHTML=d===null?'<button class="examCta" onclick="focusExam()">📅 Sınav tarihini seç</button>':d>0?`<span class="examNum">${d}</span><span class="examUnit">gün</span>`:d===0?'<span class="examNum" style="font-size:34px">Bugün 🍀</span>':'<button class="examCta" onclick="focusExam()">📅 Yeni tarih seç</button>';
+  $('heroGoal').innerHTML=gn===null?'🎯 Hedef netini aşağıya yazarak yol haritanı başlat':`🎯 Hedef: <b>${gn} net</b>`;
+  const h=$('hHedef');if(h)h.innerText=d>0?`${d} gün kaldı`:'Plan & net hedefi';
+  renderYol();renderPlan();renderKonu();
+}
+let konuDers='Türkçe';
+const LESSON={"Türkçe":"📖","Matematik":"🔢","Tarih":"📜","Coğrafya":"🌍","Vatandaşlık":"⚖️","Güncel":"📰"};
+const konuDone=()=>lsGet('konu_durum',{});
+const konuPct=d=>{const s=konuDone(),L=KONULAR[d];return Math.round(L.filter(k=>s[d+'|'+k]).length/L.length*100)};
+function setKonuDers(v){konuDers=v;renderKonu()}
+function toggleKonu(i){const d=konuDers,k=KONULAR[d][i],s=konuDone();if(s[d+'|'+k])delete s[d+'|'+k];else s[d+'|'+k]=1;lsSet('konu_durum',s);renderKonu();if(window.renderPlan)renderPlan()}
+function renderKonu(){
+  if(!$('konuTabs'))return;
+  const s=konuDone(),L=KONULAR[konuDers],done=L.filter(k=>s[konuDers+'|'+k]).length,p=konuPct(konuDers);
+  let tot=0,dn=0;Object.keys(KONULAR).forEach(d=>{tot+=KONULAR[d].length;dn+=KONULAR[d].filter(k=>s[d+'|'+k]).length});
+  $('konuAll').innerText=`Genel ilerleme: %${Math.round(dn/tot*100)} • ${dn}/${tot} konu`;
+  $('konuTabs').innerHTML=Object.keys(KONULAR).map(d=>{const q=konuPct(d);return `<button class="lessonTile${d===konuDers?' on':''}" onclick="setKonuDers('${d}')"><span class="ring" style="--p:${q}"><span>${LESSON[d]}</span></span>${d}<small>%${q}</small></button>`}).join('');
+  $('konuTitle').innerText=konuDers;$('konuInfo').innerText=`${done}/${L.length} konu • %${p}`;$('konuBar').style.width=p+'%';
+  $('konuListe').innerHTML=L.map((k,i)=>{const c=s[konuDers+'|'+k];return `<label class="konuRow${c?' done':''}"><input type="checkbox" ${c?'checked':''} onchange="toggleKonu(${i})"><span>${esc(k)}</span></label>`}).join('');
 }
 
 // ---------- Başlat ----------
