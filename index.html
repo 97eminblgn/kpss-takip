@@ -259,7 +259,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
       <button class="btn" onclick="kaydetYanlis()">Deftere Kaydet</button>
     </div>
     <div class="card">
-      <div class="filterRow"><b style="font-size:13px;flex:1">📚 Kayıtlı Sorularım</b><select id="yanlisFilter" class="dersSel all" onchange="renderYanlislar()"></select></div>
+      <div class="filterRow"><b style="font-size:13px;flex:1">📚 Kayıtlı Sorularım</b><select id="yanlisFilter" class="dersSel" onchange="renderYanlislar()"></select></div>
       <div id="yanlisListe"></div>
     </div>
   </div>
@@ -349,8 +349,8 @@ async function migrate(){
 }
 
 // ---------- Başlangıç ----------
-const dersOpts=(all,genel)=>(all?'<option value="Tümü">Tümü</option>':'')+Object.keys(DERSLER).map(d=>`<option>${d}</option>`).join('')+(genel?'<option>Genel</option>':'');
-document.querySelectorAll('.dersSel').forEach(s=>s.innerHTML=dersOpts(s.classList.contains('all'),s.classList.contains('genel')));
+const dersOpts=(genel)=>Object.keys(DERSLER).map(d=>`<option>${d}</option>`).join('')+(genel?'<option>Genel</option>':'');
+document.querySelectorAll('.dersSel').forEach(s=>s.innerHTML=dersOpts(s.classList.contains('genel')));
 $('bransDers').innerHTML=Object.keys(DERSLER).map(d=>`<option value="${d}">${d} (${DERSLER[d]} Soru)</option>`).join('');
 $('bransFilter').innerHTML=dersOpts();
 $('tarih').value=todayStr();
@@ -489,7 +489,7 @@ function renderKaynak(){
 // ---------- Yedek ----------
 async function exportData(){
   const pd={};Object.keys(localStorage).filter(k=>k.startsWith('pomo_today_')||k.startsWith('man_today_')).forEach(k=>pd[k]=lsGet(k,0));
-  const d={v:2,denemeler,pomo_history:lsGet('pomo_history',[]),pomo_session:lsGet('pomo_session',0),pomo_days:pd,konu:lsGet('konu_durum',{}),goal_min:lsGet('goal_min',120),exam_date:lsGet('exam_date','')};
+  const d={v:2,denemeler,pomo_history:lsGet('pomo_history',[]),pomo_session:lsGet('pomo_session',0),pomo_days:pd,konu:lsGet('konu_durum',{}),goal_net:lsGet('goal_net',null),exam_date:lsGet('exam_date','')};
   const f=new File([JSON.stringify(d)],`kpss-yedek-${todayStr()}.json`,{type:'application/json'});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'KPSS Yedeği'});lsSet('last_backup',Date.now());renderHome();toast('Yedek gönderildi ✓');return}}catch(e){if(e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
@@ -518,7 +518,7 @@ const pLeft=()=>P.running?Math.max(0,Math.ceil((P.end-Date.now())/1000)):P.left;
 const pSave=()=>lsSet('pomo_state',P);
 function pDisp(){
   const s=pLeft();
-  $('pomoTime').innerText=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+ $('pomoTime').innerText=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
   $('pomoLabel').innerText=P.isBreak?'MOLA':'ÇALIŞMA';
   $('pomoCircle').style.borderColor=P.isBreak?'#bbf7d0':'#bfdbfe';
   $('pStartBtn').innerText=P.running?'DURAKLAT':(P.left<(P.isBreak?P.brk:P.work)*60?'DEVAM':'BAŞLAT');
@@ -573,18 +573,59 @@ async function kaydetYanlis(){
   ['yanlisSoruPrev','yanlisCozumPrev'].forEach(i=>$(i).classList.add('hidden'));$('yanlisSoruInput').value='';$('yanlisCozumInput').value='';
   renderYanlislar();renderHome();toast('Deftere kaydedildi ✓');
 }
-async function renderYanlislar(){
-  rv('y');const f=$('yanlisFilter').value;
-  const data=(await dbAll('yanlis')).filter(y=>f==='Tümü'||y.ders===f).sort((a,b)=>b.id-a.id);
-  $('yanlisListe').innerHTML=data.length?data.map(y=>`
-    <div style="border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin-bottom:10px;background:#fcfdff">
-      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;background:#0f172a;color:white;padding:4px 8px;border-radius:20px;font-weight:800">${esc(y.ders)}${y.konu?' - '+esc(y.konu):''}</span><span style="font-size:10px;color:#94a3b8">${esc(y.tarih)}</span></div>
-      <img src="${mk('y',y.soru)}" style="width:100%;border-radius:10px;margin-top:8px;border:1px solid #e2e8f0">
-      ${y.cozum?`<div style="margin-top:8px"><span style="font-size:10px;font-weight:800;color:#166534">Çözüm Foto:</span><img src="${mk('y',y.cozum)}" style="width:100%;border-radius:10px;margin-top:4px;border:1px solid #bbf7d0"></div>`:''}
-      ${y.cozumYazi?`<div style="margin-top:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px;font-size:12px;white-space:pre-wrap">${esc(y.cozumYazi)}</div>`:''}
-      <div style="text-align:right;margin-top:8px"><button class="del" onclick="yanlisSil(${y.id})">Sil</button></div>
-    </div>`).join(''):'<p style="text-align:center;color:#94a3b8;font-size:11px;padding:12px">Henüz kayıt yok</p>';
+
+// KLASÖRLÜ (AKORDEON) SİSTEM VE PREMİUM BUTON TASARIMI
+async function renderYanlislar() {
+  rv('y'); const f = $('yanlisFilter').value;
+  const data = (await dbAll('yanlis')).filter(y => y.ders === f).sort((a, b) => b.id - a.id);
+  $('yanlisListe').innerHTML = data.length ? data.map((y, i) => `
+    <div style="border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px;background:#fff;box-shadow:0 4px 12px rgba(15,23,42,.03)">
+      <!-- KLASÖR GÖRÜNÜMÜ -->
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSoru(${y.id})">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px">📸</div>
+          <div>
+            <b style="font-size:13px;color:var(--ink)">Soru ${data.length - i}</b><br>
+            <span style="font-size:10px;color:var(--mute)">${esc(y.ders)}${y.konu ? ' • ' + esc(y.konu) : ''}</span>
+          </div>
+        </div>
+        <div id="icon-${y.id}" style="font-size:11px;color:var(--blue);background:rgba(30,64,175,.08);padding:8px 12px;border-radius:10px;font-weight:800;transition:all 0.3s ease;box-shadow:0 2px 6px rgba(30,64,175,.1)">AÇ 🔽</div>
+      </div>
+      <!-- GİZLİ DETAY VE FOTOĞRAFLAR ALANI -->
+      <div id="detay-${y.id}" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px dashed #cbd5e1">
+        <div style="text-align:right;margin-bottom:8px"><span style="font-size:10px;color:var(--mute)">Eklenme: ${esc(y.tarih)}</span></div>
+        <img src="${mk('y', y.soru)}" style="width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(0,0,0,.05)">
+        ${y.cozum ? `<div style="margin-top:12px"><span style="font-size:10px;font-weight:800;color:var(--blue)">Çözüm Foto:</span><img src="${mk('y', y.cozum)}" style="width:100%;border-radius:12px;margin-top:6px;border:1px solid var(--line);box-shadow:0 4px 10px rgba(0,0,0,.05)"></div>` : ''}
+        ${y.cozumYazi ? `<div style="margin-top:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;font-size:13px;white-space:pre-wrap;color:#334155">${esc(y.cozumYazi)}</div>` : ''}
+        <div style="text-align:right;margin-top:12px"><button class="del" style="background:#fef2f2;border-radius:8px;padding:8px 14px" onclick="yanlisSil(${y.id})">Sil</button></div>
+      </div>
+    </div>`).join('') : '<p style="text-align:center;color:var(--mute);font-size:11px;padding:12px">Henüz kayıt yok</p>';
 }
+
+window.toggleSoru = function(id) {
+  const el = $('detay-' + id);
+  const ic = $('icon-' + id);
+  if (el) {
+    if (el.classList.contains('hidden')) {
+      el.classList.remove('hidden');
+      if (ic) { 
+        ic.innerHTML = 'KAPAT 🔼'; 
+        ic.style.background = 'var(--blue)'; 
+        ic.style.color = 'white'; 
+        ic.style.boxShadow = '0 4px 12px rgba(30,64,175,.3)'; 
+      }
+    } else {
+      el.classList.add('hidden');
+      if (ic) { 
+        ic.innerHTML = 'AÇ 🔽'; 
+        ic.style.background = 'rgba(30,64,175,.08)'; 
+        ic.style.color = 'var(--blue)'; 
+        ic.style.boxShadow = '0 2px 6px rgba(30,64,175,.1)'; 
+      }
+    }
+  }
+};
+
 async function yanlisSil(id){if(!confirm('Silinsin mi?'))return;await dbDel('yanlis',id);renderYanlislar();renderHome()}
 
 // ---------- Defterim: Dokümanlar ----------
@@ -745,8 +786,7 @@ function renderKonu(){
   let tot=0,dn=0;Object.keys(KONULAR).forEach(d=>{tot+=KONULAR[d].length;dn+=KONULAR[d].filter(k=>s[d+'|'+k]).length});
   $('konuAll').innerText=`Genel ilerleme: %${Math.round(dn/tot*100)} • ${dn}/${tot} konu`;
   $('konuTabs').innerHTML=Object.keys(KONULAR).map(d=>{const q=konuPct(d);return `<button class="lessonTile${d===konuDers?' on':''}" onclick="setKonuDers('${d}')"><span class="ring" style="--p:${q}"><span>${LESSON[d]}</span></span>${d}<small>%${q}</small></button>`}).join('');
-  $('konuTitle').innerText=konuDers;$('konuInfo').innerText=`${done}/${L.length} konu • %${p}`;$('konuBar').style.width=p+'%';
-  $('konuListe').innerHTML=L.map((k,i)=>{const c=s[konuDers+'|'+k];return `<label class="konuRow${c?' done':''}"><input type="checkbox" ${c?'checked':''} onchange="toggleKonu(${i})"><span>${esc(k)}</span></label>`}).join('');
+  $('konuTitle').innerText=konuDers;$('konuInfo').innerText=`${done}/${L.length} konu • %${p}`;$('konuBar').style.width=p+'\%';$('konuListe').innerHTML=L.map((k,i)=>{const c=s[konuDers+'|'+k];return `<label class="konuRow${c?' done':''}"><input type="checkbox" ${c?'checked':''} onchange="toggleKonu(${i})"><span>${esc(k)}</span></label>`}).join('');
 }
 
 // ---------- Başlat ----------
