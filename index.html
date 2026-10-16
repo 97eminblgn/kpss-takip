@@ -95,6 +95,20 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
 .yolSum{font-size:14px;line-height:1.7;margin:0 0 14px}
 .pl{display:block;font-size:11px;color:var(--mute);font-weight:700;margin-top:2px;text-decoration:none}
 .muted{font-size:12px;color:#64748b;line-height:1.6;margin:8px 0}
+
+/* ---------- PRO MODAL (KPSS SATIN ALMA EKRANI) ---------- */
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.85); backdrop-filter:blur(6px); z-index:100; display:flex; align-items:center; justify-content:center; opacity:1; transition:0.3s; padding:20px; }
+.modal-overlay.hidden { opacity:0; pointer-events:none; }
+.pro-card { background:#fff; border-radius:24px; padding:24px; width:100%; max-width:340px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.3); position:relative; transform:scale(1); transition:0.3s; }
+.modal-overlay.hidden .pro-card { transform:scale(0.9); }
+.pro-icon { width:60px; height:60px; background:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; color:#fff; box-shadow:0 10px 20px rgba(15,23,42,0.2); }
+.pro-title { font-size:20px; font-weight:900; color:var(--ink); margin-bottom:8px; letter-spacing:-0.5px; }
+.pro-desc { font-size:13px; color:var(--mute); line-height:1.6; margin-bottom:20px; }
+.pro-price { font-size:32px; font-weight:900; color:var(--ink); margin-bottom:20px; }
+.pro-price span { font-size:14px; font-weight:700; color:var(--mute); }
+.btn-pro { width:100%; padding:16px; border-radius:16px; border:none; font-weight:900; font-size:15px; background:var(--blue); color:#fff; cursor:pointer; box-shadow:0 8px 20px rgba(30,64,175,0.3); transition:0.2s; margin-bottom:10px; }
+.btn-pro:active { transform:scale(0.96); }
+.btn-close-modal { background:transparent; border:none; color:var(--mute); font-size:13px; font-weight:700; cursor:pointer; padding:8px; }
 </style>
 </head>
 <body>
@@ -307,6 +321,18 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0
   <div class="card"><b>📺 Önerilen YouTube Kanalları</b><div style="margin-top:10px" id="ytList"></div></div>
   <div class="card"><b>📚 Önerilen Yayınlar</b><div style="margin-top:10px" id="yayinList"></div></div>
   <div class="card" style="font-size:11px;color:#64748b;line-height:1.6">UYARI: Bu listeler kişisel önerilerdir; resmî değildir, sıralama veya puan içermez. İçerik sahipleriyle bir bağlantımız yoktur. Kaynakların niteliği tamamen kişisel yoruma dayalıdır</div>
+</div>
+<!-- PRO SATIN ALMA EKRANI (KPSS) -->
+<div id="proModal" class="modal-overlay hidden">
+  <div class="pro-card">
+    <div class="pro-icon">👑</div>
+    <div class="pro-title">Sınırları Kaldır</div>
+    <div class="pro-desc">Ücretsiz 3 soru sınırına ulaştın. Defterine sınırsız soru eklemek ve tüm özelliklerin kilidini açmak için PRO'ya geç.</div>
+    <div class="pro-price">50 TL <span>/ tek seferlik</span></div>
+    
+    <button class="btn-pro" onclick="satinAlTetikle()">PRO KİLİDİNİ AÇ</button>
+    <button class="btn-close-modal" onclick="$('proModal').classList.add('hidden')">Belki Daha Sonra</button>
+  </div>
 </div>
 <div id="toast"></div>
 
@@ -564,14 +590,37 @@ async function handleYanlis(inp,k){
   try{yFile[k]=await compress(f)}catch{return toast('Fotoğraf okunamadı')}
   const img=$(k==='soru'?'yanlisSoruPrev':'yanlisCozumPrev');img.src=URL.createObjectURL(yFile[k]);img.classList.remove('hidden');
 }
-async function kaydetYanlis(){
-  if(!yFile.soru)return toast('Soru fotoğrafı seç');
-  try{
-    await dbPut('yanlis',{id:Date.now(),ders:$('yanlisDers').value,konu:$('yanlisKonu').value.trim(),soru:yFile.soru,cozum:yFile.cozum,cozumYazi:$('yanlisCozumYazi').value.trim(),tarih:new Date().toLocaleDateString('tr-TR')});
-  }catch{return toast('Kayıt başarısız (depolama dolu olabilir)')}
-  yFile={soru:null,cozum:null};$('yanlisKonu').value='';$('yanlisCozumYazi').value='';
-  ['yanlisSoruPrev','yanlisCozumPrev'].forEach(i=>$(i).classList.add('hidden'));$('yanlisSoruInput').value='';$('yanlisCozumInput').value='';
-  renderYanlislar();renderHome();toast('Deftere kaydedildi ✓');
+async function kaydetYanlis() {
+  if(!yFile.soru) return toast('Soru fotoğrafı seç');
+
+  // --- 👑 PRO KONTROLÜ BAŞLANGICI (KPSS) ---
+  const isPro = lsGet('is_pro_kpss', false); 
+  if (!isPro) {
+    const soruSayisi = await dbCount('yanlis'); 
+    if (soruSayisi >= 3) {
+      $('proModal').classList.remove('hidden'); 
+      return; 
+    }
+  }
+  // --- 👑 PRO KONTROLÜ BİTİŞİ ---
+
+  try {
+    await dbPut('yanlis', { id: Date.now(), ders: $('yanlisDers').value, konu: $('yanlisKonu').value.trim(), soru: yFile.soru, cozum: yFile.cozum, cozumYazi:$('yanlisCozumYazi').value.trim(), tarih: new Date().toLocaleDateString('tr-TR') });
+  } catch { return toast('Kayıt başarısız (depolama dolu olabilir)') }
+  
+  yFile = { soru: null, cozum: null }; $('yanlisKonu').value = '';$('yanlisCozumYazi').value = '';
+  ['yanlisSoruPrev', 'yanlisCozumPrev'].forEach(i => $(i).classList.add('hidden')); $('yanlisSoruInput').value = '';$('yanlisCozumInput').value = '';
+  renderYanlislar(); renderHome(); toast('Deftere kaydedildi ✓');
+}
+
+// SATIN AL BUTONUNA BASILINCA ÇALIŞACAK FONKSİYON
+function satinAlTetikle() {
+  const testOnay = confirm("Test Aşaması: 'Tamam'a basarsanız sanki 50 TL ödenmiş gibi PRO kilidi açılacaktır.");
+  if(testOnay) {
+    lsSet('is_pro_kpss', true); 
+    $('proModal').classList.add('hidden'); 
+    toast('🎉 Tebrikler! PRO sürüm aktif edildi.');
+  }
 }
 
 // KLASÖRLÜ (AKORDEON) SİSTEM VE PREMİUM BUTON TASARIMI
